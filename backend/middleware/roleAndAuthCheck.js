@@ -7,11 +7,9 @@ function roleAndAuthCheck(...roles) {
     }
 
     if (!roles.includes(req.user.role)) {
-      // console.log("user is ", req.user);
       return next(createNewError("Forbidden!", 403));
     }
 
-    // console.log("role check working fine");
     return next();
   };
 }

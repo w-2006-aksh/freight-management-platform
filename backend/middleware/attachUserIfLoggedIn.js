@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 function attachUserIfLoggedIn(req,res,next){
     const token = req.cookies?.token;
     if(!token){
-      // console.log("token not found ");
+     
        return next();
     }
     try {

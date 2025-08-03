@@ -57,9 +57,20 @@ const bidSchema = new mongoose.Schema(
       required: true,
     },
 
-    important: {
+    importantForClient: {
       type: Boolean,
       default: false,
+    },
+
+    importantForTransporter: {
+      type: Boolean,
+      default: false,
+    },
+    
+
+    live: {
+      type: Boolean,
+      default: true,
     },
 
     status: {

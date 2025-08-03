@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 router.get('/', (req,res)=>{
-    // console.log(req.user);
-    // console.log("req for login status on app render received");
     if(req.user==null){
         return res.json({message:"Not logged in", success:false});
     }
@@ -13,7 +11,6 @@ router.get('/', (req,res)=>{
 
 
 router.post('/logout',(req,res)=>{
-    // console.log("logout req received!");
     res.clearCookie("token",{
         httpOnly: true,
         sameSite: "Lax",

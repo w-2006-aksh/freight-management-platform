@@ -30,14 +30,7 @@ function SignUpAsClient() {
     }
 
     try {
-      // const response = await fetch("/api/loginAndSignUp/client/signup", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(userData),
-      // });
-      // const data = await response.json();
+     
       const res = await apiCall("/api/loginAndSignUp/client/signup", {
         method: "POST",
         body: userData,

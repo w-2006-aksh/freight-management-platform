@@ -10,7 +10,7 @@ const postDetailsSchema = z
       .string({ required_error: 'The field "Driver Name" cannot be empty' })
       .trim()
       .min(3, { message: "Name must be atleast 3 characters" })
-      .regex(/^[a-zA-Z\s]$/),
+      .regex(/^[a-zA-Z\s]+$/, { message: "Name must have only characters" }),
 
     driverPhNo: z
       .string({ required_error: "driver phone Number cannot be empty" })

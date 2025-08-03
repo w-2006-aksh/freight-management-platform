@@ -3,7 +3,7 @@ const createNewError = require("../../util/createNewError");
 
 const handleSignUp = async (req, res, next) => {
   const { password, address, gstNo, phNo, email, name } = req.body;
-  const data = req.body;
+
 
   try {
     const existingTransporter = await Transporter.findOne({

@@ -13,9 +13,7 @@ function PostAQuote() {
   useEffect(() => {
     const fetchBid = async () => {
       try {
-        const res = await apiCall(`/api/bids/getBidDetails/${bidNo}`, {
-          // method: "GET",
-        });
+        const res = await apiCall(`/api/bids/getBidDetails/${bidNo}`);
         if (res.success) {
           setBid(res.bid);
         } else {
@@ -34,25 +32,14 @@ function PostAQuote() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // const res = await fetch(`/api/transporter/${bidNo}/postAQuote`, {
-      //   method: "POST",
-      //   credentials: "include",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ quotedPrice }),
-      // });
-
       const res = await apiCall(`/api/transporter/${bidNo}/postAQuote`, {
         method: "POST",
         body: { quotedPrice },
       });
-      // const data = await res.json();
       if (res.success) {
         toast.success("Quote sent successfully!");
         navigate("/transporter/bids");
       } else {
-        // toast.error(res.message);
       }
     } catch (error) {
       toast.error("Internal server error. Please try again later.");
@@ -81,7 +68,7 @@ function PostAQuote() {
             </div>
           </div>
           <div className="flex items-center">
-            <i class="fa-solid fa-truck-fast"></i>
+            <i className="fa-solid fa-truck-fast"></i>
           </div>
           <div className="flex flex-col justify-center items-center">
             <div className="sm:text-[18px] text-[15px]">To</div>

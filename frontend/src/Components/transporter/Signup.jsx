@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import apiCall from "../../../util/apiCall";
 
 function SignUpAsTransporter() {
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
   const [userData, setUserData] = useState({
     name: "",
@@ -25,25 +24,15 @@ function SignUpAsTransporter() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isAuthenticated) {
-      toast.error("Already logged in!");
-      navigate("/");
-    }
+    
 
     try {
-      // const response = await fetch("/api/loginAndSignUp/transporter/signup", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(userData),
-      // });
-      // const data = await response.json();
+    
       const res = await apiCall("/api/loginAndSignUp/transporter/signup", {
         method: "POST",
         body: userData,
       });
-      if (res.success) toast.success(data.message);
+      if (res.success) toast.success(res.message);
       else {
       }
     } catch (error) {

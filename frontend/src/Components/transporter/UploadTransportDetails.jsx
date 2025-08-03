@@ -49,12 +49,6 @@ function uploadDetails() {
       formData.append("vehicleDocument", details.vehicleDocument);
 
       try {
-        // const res = await fetch(`/api/transporter/${bidId}/uploadDetails`, {
-        //   method: "POST",
-        //   credentials: "include",
-        //   body: formData,
-        // });
-        // const data = await res.json();
         const res = await apiCall(`/api/transporter/${bidId}/uploadDetails`, {
           method: "POST",
           body: formData,

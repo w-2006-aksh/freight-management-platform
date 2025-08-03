@@ -2,53 +2,18 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
+import socket from "../../Socket.jsx";
+import { getTransporterBidContext } from "../../../Context/TransporterContext.jsx";
 
 function Bids() {
   const [activeTab, setActiveTab] = useState("live");
-  const [liveBids, setLiveBids] = useState([]);
-  const [myBids, setMyBids] = useState([]);
+
+  const { liveBids, myBids } = getTransporterBidContext();
 
   const Navigate = useNavigate();
-  useEffect(() => {
-    const fetchLiveBidsData = async () => {
-      try {
-        const data = await apiCall("/api/transporter/liveBids", {
-          // method: "GET",
-        });
-        if (data.success) {
-          setLiveBids(data.liveBids);
-        } else if (data.success == false) {
-          Navigate("/");
-        }
-      } catch (error) {
-        toast.error("Internal server error. Please try again later.");
-      }
-    };
-    fetchLiveBidsData();
-  }, []);
-
-  const fetchMyBidsData = async () => {
-    if (myBids.length > 0) return;
-    try {
-      const res = await apiCall("/api/transporter/myBids", {
-        // method: "GET",
-      });
-
-      if (res.success) {
-        setMyBids(res.myBids);
-      } else {
-        Navigate("/");
-      }
-    } catch (error) {
-      toast.error("Internal server error. Please try again later.");
-    }
-  };
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    if (tab === "myBids") {
-      fetchMyBidsData();
-    }
   };
 
   return (
@@ -99,7 +64,7 @@ function Bids() {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <i className="fa-solid fa-arrow-right-long text-[16px]"></i>
+                  <i className="fa-solid fa-truck-fast text-lg"></i>
                 </div>
                 <div className="flex flex-col items-center justify-center">
                   <div className="text-[15px] sm:text-[16px]">To</div>
@@ -149,7 +114,7 @@ function Bids() {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <i className="fa-solid fa-arrow-right-long text-[16px]"></i>
+                  <i className="fa-solid fa-truck-fast text-lg"></i>
                 </div>
                 <div className="flex flex-col items-center justify-center">
                   <div className="text-[15px] sm:text-[16px]">To</div>

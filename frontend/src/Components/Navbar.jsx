@@ -14,11 +14,7 @@ function Navbar() {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const handleLogout = async () => {
     try {
-      // const res = await fetch("/api/me/logout", {
-      //   method: "POST",
-      //   credentials: "include",
-      // });
-      // const data = await res.json();
+     
       const res = await apiCall("/api/me/logout", { method: "POST" });
       if (res.success) {
         dispatch(logout());

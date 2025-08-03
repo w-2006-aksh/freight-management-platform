@@ -5,7 +5,10 @@ const { Types } = require("mongoose");
 const Quote = require("../models/quote");
 const upload = require("../storage/multer");
 const createNewError = require("../util/createNewError");
-const {postDetailsSchema} = require("../formDataValidate/transporter/postDetails");
+const { getIO } = require("../config/socket.js");
+const {
+  postDetailsSchema,
+} = require("../formDataValidate/transporter/postDetails");
 const validate = require("../middleware/formDataValidator");
 
 router.get("/liveBids", async (req, res, next) => {
@@ -16,6 +19,8 @@ router.get("/liveBids", async (req, res, next) => {
     const liveBids = await Bid.find({
       status: "active",
       bidNo: { $nin: myQuotes },
+    }).sort({
+      createdAt: -1,
     });
 
     return res.status(200).json({ success: true, liveBids });
@@ -27,7 +32,11 @@ router.get("/liveBids", async (req, res, next) => {
 router.get("/myBids", async (req, res, next) => {
   try {
     const transporterId = req.user._id;
-    const myBids = await Bid.find({ selectedTransporter: transporterId });
+    const myBids = await Bid.find({ selectedTransporter: transporterId }).sort({
+      live: -1,
+      importantForTransporter: -1,
+      createdAt: -1,
+    });
     return res.status(200).json({ success: true, myBids });
   } catch (error) {
     return next(createNewError("Failed to fetch your bids", 500));
@@ -38,7 +47,8 @@ router.post("/:bidNo/postAQuote", async (req, res, next) => {
   try {
     const { quotedPrice } = req.body;
     const bidNo = req.params.bidNo;
-
+    const bid = await Bid.findOne({ bidNo });
+    console.log("working till bid find");
     const existingQuote = await Quote.findOne({
       bidNo,
       transporter: req.user._id,
@@ -52,6 +62,18 @@ router.post("/:bidNo/postAQuote", async (req, res, next) => {
       bidNo,
       transporter: new Types.ObjectId(req.user._id),
     });
+    console.log("working till quote submit");
+    const io = getIO();
+    const populatedQuote = await quote.populate(
+      "transporter",
+      "name email phNo"
+    );
+    console.log("quote submitted by", req.user._id.toString());
+    io.to(req.user._id.toString()).emit("quote-submitted", { bidNo });
+    console.log("quote submit bidNo", bidNo);
+    console.log("transporterid is", req.user._id.toString());
+    io.to(bid.client._id.toString()).emit("new-quote", populatedQuote);
+    console.log("working till io and client id is ", bid.client._id.toString());
     return res
       .status(200)
       .json({ success: true, message: "Quote successfully registered!" });
@@ -68,7 +90,6 @@ const handleUpload = (req, res, next) => {
 
   uploadHandler(req, res, (error) => {
     if (error) {
-      // console.log("error in uploading at line 69 in routes");
       return next(
         createNewError(
           "Upload failed! Check size and format of documents!",
@@ -76,7 +97,6 @@ const handleUpload = (req, res, next) => {
         )
       );
     }
-    // console.log("uploaded!");
     return next();
   });
 };
@@ -89,7 +109,7 @@ router.post(
     try {
       const bidId = req.params.bidId.toString();
       const bid = await Bid.findById(bidId);
-      console.log(bid);
+
       if (!bid) {
         return next(createNewError("No such bid", 404));
       }
@@ -99,8 +119,6 @@ router.post(
       }
 
       const currentTransporterId = req.user._id;
-      console.log("currentTransp", currentTransporterId);
-      console.log("selected is", bid.selectedTransporter.toString());
 
       if (
         bid.selectedTransporter.toString() != currentTransporterId.toString()
@@ -131,8 +149,8 @@ router.post(
         ""
       );
 
-      await Bid.updateOne(
-        { _id: new Types.ObjectId(bidId) },
+      const updatedBid = await Bid.findByIdAndUpdate(
+        bidId,
         {
           transportDetails: {
             driverName,
@@ -142,9 +160,16 @@ router.post(
             vehicleDocumentUrl,
           },
           status: "Awaiting detail confirmation",
-        }
-      );
+          importantForClient: true,
+          importantForTransporter: false,
+        },
+        { new: true }
+      ).populate("selectedTransporter", "name email phNo");
 
+      const io = getIO();
+      console.log("the client is", updatedBid.client.toString());
+      io.to(updatedBid.client.toString()).emit("details-uploaded", updatedBid);
+      io.to(req.user._id).emit("details-uploaded", updatedBid);
       return res
         .status(200)
         .json({ success: true, message: "Upload Successful!" });

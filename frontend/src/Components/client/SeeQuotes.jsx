@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
-
+import socket from "../../Socket";
 function SeeQuotes() {
   const { bidId } = useParams();
   const navigate = useNavigate();
@@ -13,15 +13,7 @@ function SeeQuotes() {
   const handleAcceptQuote = async (quote) => {
     console.log("Sending quote:", JSON.stringify(quote, null, 2));
     changeAllowSubmit(false);
-    // const res = await fetch(`/api/client/${bidId}/acceptQuote`, {
-    //   method: "POST",
-    //   credentials: "include",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    //   body: JSON.stringify(quote),
-    // });
-    // const data = await res.json();
+
     const res = await apiCall(`/api/client/${bidId}/acceptQuote`, {
       method: "POST",
       body: quote,
@@ -37,13 +29,7 @@ function SeeQuotes() {
   useEffect(() => {
     const fetchBidandQuotes = async () => {
       try {
-        // const res = await fetch(`/api/client/${bidId}/seeQuotes`, {
-        //   credentials: "include",
-        // });
-        // const data = await res.json();
-        const res = await apiCall(`/api/client/${bidId}/seeQuotes`, {
-          // method: "GET",
-        });
+        const res = await apiCall(`/api/client/${bidId}/seeQuotes`, {});
         if (res.success) {
           setBidData(res);
         } else {
@@ -57,9 +43,39 @@ function SeeQuotes() {
       }
     };
     fetchBidandQuotes();
+
+    const handleNewQuote = (newQuote) => {
+      console.log("quote is", newQuote);
+      setBidData((prev) => {
+        if (prev.bidDetails.bidNo !== newQuote.bidNo) {
+          return prev;
+        }
+
+        if (
+          prev.quotes.some(
+            (existingtQuotes) => existingtQuotes._id === newQuote._id
+          )
+        )
+          return prev;
+
+        const UpdatedQuotes = [newQuote, ...prev.quotes].sort(
+          (a, b) => a.quotedPrice - b.quotedPrice
+        );
+        return {
+          ...prev,
+          quotes: UpdatedQuotes,
+        };
+      });
+    };
+
+    socket.on("new-quote", handleNewQuote);
+
+    return () => {
+      socket.off("new-quote", handleNewQuote);
+    };
   }, [bidId, navigate]);
 
-  if (loading) return <div></div>;
+  if (loading || !bidData) return <div></div>;
 
   return (
     <div className="font-sans flex flex-col items-center gap-6 px-4 sm:px-12 py-6 bg-gray-100 min-h-screen">
@@ -100,7 +116,7 @@ function SeeQuotes() {
 
       {bidData.quotes.map((quote, index) => (
         <div
-          key={index}
+          key={quote._id}
           className="transition-transform hover:scale-[1.03] bg-white shadow-md rounded-xl w-full max-w-[700px] p-4 sm:p-6"
         >
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">

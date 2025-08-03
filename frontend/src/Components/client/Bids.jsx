@@ -2,86 +2,16 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import apiCall from "../../../util/apiCall";
-
+import { getClientBidContext } from "../../../Context/ClientBidContext";
 function Bids() {
   const [activeTab, setActiveTab] = useState("live");
-  const [liveBids, setLiveBids] = useState([]);
-  const [inProgressBids, setInProgressBids] = useState([]);
-  const [completedBids, setCompletedBids] = useState([]);
+
   const Navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchLiveBidsData = async () => {
-      try {
-        // const res = await fetch("/api/client/liveBids", {
-        //   method: "GET",
-        //   credentials: "include",
-        // });
-        // const data = await res.json();
-        const res = await apiCall("/api/client/liveBids");
-        if (res.success) {
-          setLiveBids(res.liveBids);
-        } else {
-          Navigate("/");
-        }
-      } catch (error) {
-        toast.error("Internal server error. Please try again later.");
-      }
-    };
-    fetchLiveBidsData();
-  }, []);
-
-  const fetchInProgressBids = async () => {
-    console.log(inProgressBids);
-    if (inProgressBids.length > 0) return;
-    try {
-      //   const res = await fetch("/api/client/inProgressBids", {
-      //     method: "GET",
-      //     credentials: "include",
-      //   });
-      //   const data = await res.json();
-
-      const res = await apiCall("/api/client/inProgressBids");
-
-      console.log("res is ", res.inProgressBids);
-      if (res.success) {
-        setInProgressBids(res.inProgressBids);
-      } else {
-        // toast.error(res.message);
-        Navigate("/");
-      }
-    } catch (error) {
-      toast.error("Internal server error. Please try again later.");
-    }
-  };
-
-  const fetchCompletedBids = async () => {
-    if (completedBids.length > 0) return;
-    try {
-      //   const res = await fetch("/api/client/completedBids", {
-      //     method: "GET",
-      //     credentials: "include",
-      //   });
-      //   const data = await res.json();
-
-      const res = await apiCall("/api/client/completedBids");
-      console.log(res);
-
-      if (res.success) {
-        setCompletedBids(res.completedBids);
-      } else {
-        // toast.error(res.message);
-        Navigate("/");
-      }
-    } catch (error) {
-      toast.error("Internal server error. Please try again later.");
-    }
-  };
+  const { liveBids, inProgressBids, completedBids } = getClientBidContext();
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    if (tab === "inProgress") fetchInProgressBids();
-    if (tab === "completed") fetchCompletedBids();
   };
 
   return (
@@ -211,13 +141,13 @@ function Bids() {
                   Total Load: {bid.load} ton
                 </div>
                 <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  {bid.selectedTransporter?.[0]?.name || "N/A"}
+                  {bid.selectedTransporter?.name || "N/A"}
                 </div>
                 <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  Email: {bid.selectedTransporter?.[0]?.email || "N/A"}
+                  Email: {bid.selectedTransporter?.email || "N/A"}
                 </div>
                 <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  Phone: {bid.selectedTransporter?.[0]?.phNo || "N/A"}
+                  Phone: {bid.selectedTransporter?.phNo || "N/A"}
                 </div>
               </div>
             </div>
@@ -269,13 +199,13 @@ function Bids() {
                   Total Load: {bid.load} ton
                 </div>
                 <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  {bid.selectedTransporter?.[0]?.name || "N/A"}
+                  {bid.selectedTransporter?.name || "N/A"}
                 </div>
                 <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  Email: {bid.selectedTransporter?.[0]?.email || "N/A"}
+                  Email: {bid.selectedTransporter?.email || "N/A"}
                 </div>
                 <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  Phone: {bid.selectedTransporter?.[0]?.phNo || "N/A"}
+                  Phone: {bid.selectedTransporter?.phNo || "N/A"}
                 </div>
               </div>
               {bid.status === "Awaiting detail confirmation" && (

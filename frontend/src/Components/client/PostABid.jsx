@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
-
+import socket from "../../Socket.jsx";
 function PostABid() {
   const [cityData, setCityData] = useState([]);
   const navigate = useNavigate();
@@ -39,16 +39,9 @@ function PostABid() {
         body: finalBidData,
       });
 
-      // const res = await fetch("/api/client/postABid", {
-      //   credentials: "include",
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(finalBidData),
-      // });
-
-      // const data = await res.json();
       if (res.success) {
         toast.success(res.message);
+        socket.emit("new-bid-posted", res.bid);
         navigate("/client/bids");
       } else {
         navigate("/client/postABid");
@@ -160,7 +153,7 @@ function PostABid() {
 
         <button
           type="submit"
-          className="bg-orange-500 font-semibold hover:scale-[1.02] hover:bg-orange-400 transition text-white p-2 text-[18px] lg:text-xl mt-4 rounded-md"
+          className="bg-orange-500 font-semibold hover:cursor-pointer hover:scale-[1.02] hover:bg-orange-400 transition text-white p-2 text-[18px] lg:text-xl mt-4 rounded-md"
         >
           Post Request
         </button>

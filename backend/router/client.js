@@ -8,6 +8,12 @@ const Bid = require("../models/bid");
 const getBidNo = require("../controllers/clientControllers/bidNo");
 const Quote = require("../models/quote");
 const createNewError = require("../util/createNewError");
+const { getIO } = require("../config/socket.js");
+
+const { NewBidBroadcastJob } = require("../queue/newBidBroadcast");
+const {
+  addBidWinnerNotificationJob,
+} = require("../queue/bidWinnerNotifications");
 
 router.get("/getCities", (req, res, next) => {
   try {
@@ -24,16 +30,7 @@ router.post(
     try {
       const { from, to, load, commodity, startDate, endDate } = req.body;
       const bidNo = await getBidNo();
-      console.log({
-        from,
-        to,
-        load,
-        commodity,
-        startDate,
-        bidNo,
-        endDate,
-        client: req.user._id,
-      });
+
       const bid = await Bid.create({
         from,
         to,
@@ -44,6 +41,12 @@ router.post(
         endDate,
         client: req.user._id,
       });
+
+      await NewBidBroadcastJob(bidNo);
+      const io = getIO();
+      io.to("transporters").emit("new-bid-posted", bid);
+      io.to(req.user._id).emit("new-bid-posted", bid);
+
       return res
         .status(200)
         .json({ success: true, message: "Bid created successfully", bid });
@@ -65,14 +68,12 @@ router.get("/liveBids", async (req, res, next) => {
 
       {
         $sort: {
-          important: -1,
           createdAt: -1,
         },
       },
     ];
 
     const liveBids = await Bid.aggregate(pipeline);
-    console.log(liveBids);
 
     return res.status(200).json({ success: true, liveBids });
   } catch (error) {
@@ -92,9 +93,21 @@ router.get("/completedBids", async (req, res, next) => {
 
       {
         $sort: {
-          important: -1,
           createdAt: -1,
         },
+      },
+
+      {
+        $lookup: {
+          from: "transporters",
+          localField: "selectedTransporter",
+          foreignField: "_id",
+          as: "selectedTransporter",
+        },
+      },
+
+      {
+        $unwind: "$selectedTransporter",
       },
     ];
 
@@ -116,7 +129,7 @@ router.get("/inProgressBids", async (req, res, next) => {
       },
       {
         $sort: {
-          important: -1,
+          importantForClient: -1,
           createdAt: -1,
         },
       },
@@ -128,6 +141,9 @@ router.get("/inProgressBids", async (req, res, next) => {
           foreignField: "_id",
           as: "selectedTransporter",
         },
+      },
+      {
+        $unwind: "$selectedTransporter",
       },
     ];
 
@@ -148,7 +164,7 @@ router.get("/:bidId/seeQuotes", async (req, res, next) => {
     }
 
     const quotes = await Quote.find({ bidNo: bid.bidNo })
-      .populate("transporter", "name email phNo, _id address")
+      .populate("transporter", "name email phNo address")
       .sort({ quotedPrice: 1 });
     return res.status(200).json({
       success: true,
@@ -156,7 +172,6 @@ router.get("/:bidId/seeQuotes", async (req, res, next) => {
       quotes,
     });
   } catch (error) {
-    console.error(error);
     return next(createNewError("Internal server error", 500));
   }
 });
@@ -172,14 +187,25 @@ router.post("/:bidId/acceptQuote", async (req, res, next) => {
 
     const bidObjectId = req.params.bidId;
     const { transporter, quotedPrice } = req.body;
-    const data = await Bid.updateOne(
-      { _id: bidObjectId },
+
+    const updatedBid = await Bid.findByIdAndUpdate(
+      bidId,
       {
         selectedTransporter: transporter._id,
         status: "Awaiting transport details",
+        importantForClient: false,
         finalPrice: quotedPrice,
-      }
-    );
+        importantForTransporter: true,
+      },
+      { new: true }
+    ).populate("selectedTransporter", "phNo email name");
+
+    const io = getIO();
+
+    io.to(transporter._id).emit("bid-won", updatedBid);
+    io.to(req.user._id.toString()).emit("bid-accepted", updatedBid);
+    console.log("bidupdatedonacceptance is", updatedBid);
+    addBidWinnerNotificationJob(bid.bidNo, transporter.phNo);
     return res.status(200).json({ success: true });
   } catch (error) {
     return next(createNewError("Internal server error", 500));
@@ -213,7 +239,10 @@ router.post("/:bidId/confirmDetails", async (req, res, next) => {
       return next(createNewError("Cannot perform action!", 403));
     }
 
-    await Bid.updateOne({ _id: bidId }, { status: "en route" });
+    await Bid.updateOne(
+      { _id: bidId },
+      { status: "en route", importantForClient: false }
+    );
     return res.status(200).json({ success: true });
   } catch {
     return next(createNewError("Internal server error", 500));

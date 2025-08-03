@@ -44,7 +44,6 @@ function LoginAsTransporter() {
       }
     } catch (error) {
       changeLoginStatus(false);
-      // toast.error("Internal server error. Please try again later.");
     }
   };
 
@@ -94,7 +93,7 @@ function LoginAsTransporter() {
 
           <button
             type="submit"
-            className="w-full bg-orange-500 text-white py-2 rounded-lg text-lg font-medium hover:bg-orange-600 transition hover:scale-[1.03] shadow-md"
+            className="w-full bg-orange-500 hover:cursor-pointer text-white py-2 rounded-lg text-lg font-medium hover:bg-orange-600 transition hover:scale-[1.03] shadow-md"
           >
             Login
           </button>
