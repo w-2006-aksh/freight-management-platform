@@ -14,7 +14,6 @@ function Navbar() {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const handleLogout = async () => {
     try {
-     
       const res = await apiCall("/api/me/logout", { method: "POST" });
       if (res.success) {
         dispatch(logout());
@@ -48,7 +47,7 @@ function Navbar() {
               <>
                 <li>
                   <Link
-                    to="/client/postABid"
+                    to="/client/post-a-bid"
                     className="hover:text-orange-600 transition"
                     onClick={() => setMenuOpen(!menuOpen)}
                   >

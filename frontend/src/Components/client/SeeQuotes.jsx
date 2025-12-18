@@ -14,7 +14,7 @@ function SeeQuotes() {
     console.log("Sending quote:", JSON.stringify(quote, null, 2));
     changeAllowSubmit(false);
 
-    const res = await apiCall(`/api/client/${bidId}/acceptQuote`, {
+    const res = await apiCall(`/api/client/${bidId}/accept-quote`, {
       method: "POST",
       body: quote,
     });
@@ -29,7 +29,7 @@ function SeeQuotes() {
   useEffect(() => {
     const fetchBidandQuotes = async () => {
       try {
-        const res = await apiCall(`/api/client/${bidId}/seeQuotes`, {});
+        const res = await apiCall(`/api/client/${bidId}/see-quotes`, {});
         if (res.success) {
           setBidData(res);
         } else {

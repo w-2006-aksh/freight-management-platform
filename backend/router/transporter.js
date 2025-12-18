@@ -11,13 +11,13 @@ const {
 } = require("../formDataValidate/transporter/postDetails");
 const validate = require("../middleware/formDataValidator");
 
-router.get("/liveBids", async (req, res, next) => {
+router.get("/live-bids", async (req, res, next) => {
   try {
     const myQuotes = await Quote.find({ transporter: req.user._id }).distinct(
       "bidNo"
     );
     const liveBids = await Bid.find({
-      status: "active",
+      status: "Live",
       bidNo: { $nin: myQuotes },
     }).sort({
       createdAt: -1,
@@ -29,7 +29,7 @@ router.get("/liveBids", async (req, res, next) => {
   }
 });
 
-router.get("/myBids", async (req, res, next) => {
+router.get("/my-bids", async (req, res, next) => {
   try {
     const transporterId = req.user._id;
     const myBids = await Bid.find({ selectedTransporter: transporterId }).sort({
@@ -43,7 +43,7 @@ router.get("/myBids", async (req, res, next) => {
   }
 });
 
-router.post("/:bidNo/postAQuote", async (req, res, next) => {
+router.post("/:bidNo/post-a-quote", async (req, res, next) => {
   try {
     const { quotedPrice } = req.body;
     const bidNo = req.params.bidNo;
@@ -102,7 +102,7 @@ const handleUpload = (req, res, next) => {
 };
 
 router.post(
-  "/:bidId/uploadDetails",
+  "/:bidId/upload-details",
   handleUpload,
   validate(postDetailsSchema),
   async (req, res, next) => {
@@ -159,7 +159,7 @@ router.post(
             driverLicenseUrl,
             vehicleDocumentUrl,
           },
-          status: "Awaiting detail confirmation",
+          status: "Awaiting Detail Confirmation",
           importantForClient: true,
           importantForTransporter: false,
         },

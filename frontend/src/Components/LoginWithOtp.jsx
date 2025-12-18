@@ -27,7 +27,7 @@ function LoginWithOtp({ role }) {
     changeAllowSubmit(false);
     try {
       const res = await apiCall(
-        `/api/loginAndSignUp/${role}/login/requestOTP`,
+        `/api/loginAndSignUp/${role}/login/request-OTP`,
         {
           method: "POST",
           body: { phNo: loginData.phNo },
@@ -57,7 +57,7 @@ function LoginWithOtp({ role }) {
       if (res.success) {
         dispatch(setUser(res.user)), dispatch(changeAuthenticationStatus(true));
         toast.success(res.message);
-        if (role == "client") navigate("client/postABid");
+        if (role == "client") navigate("client/post-a-bid");
         else navigate("/transporter/bids");
       } else {
       }
@@ -67,12 +67,12 @@ function LoginWithOtp({ role }) {
       changeAllowSubmit(true);
     }
   };
-  const handleKeyPress=(e)=>{
-    if(e.key=='Enter'&&!otpSent){
+  const handleKeyPress = (e) => {
+    if (e.key == "Enter" && !otpSent) {
       e.preventDefault();
       handleSendOtp();
     }
-  }
+  };
 
   return (
     <div className="max-w-[800px] w-full flex flex-row items-center justify-center">

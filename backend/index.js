@@ -37,6 +37,6 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
   console.log("mongooose connected");
 });
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, "0.0.0.0", () => {
   console.log("server is running!");
 });

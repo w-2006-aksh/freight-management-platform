@@ -34,7 +34,7 @@ function PostABid() {
         load: Number(bidData.load),
       };
 
-      const res = await apiCall("/api/client/postABid", {
+      const res = await apiCall("/api/client/post-a-bid", {
         method: "POST",
         body: finalBidData,
       });
@@ -44,11 +44,11 @@ function PostABid() {
         socket.emit("new-bid-posted", res.bid);
         navigate("/client/bids");
       } else {
-        navigate("/client/postABid");
+        navigate("/client/post-a-bid");
       }
     } catch (error) {
       toast.error("Internal server error! Please try agian later.");
-      navigate("/client/postABid");
+      navigate("/client/post-a-bid");
     }
   };
 

@@ -8,7 +8,7 @@ function Bids() {
 
   const Navigate = useNavigate();
 
-  const { liveBids, inProgressBids, completedBids } = getClientBidContext();
+  const { liveBids, inProgressBids, deliveredBids } = getClientBidContext();
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -40,15 +40,15 @@ function Bids() {
           In Progress{" "}
         </button>
         <button
-          onClick={() => handleTabChange("completed")}
+          onClick={() => handleTabChange("delivered")}
           className={`hover:text-orange-600 ${
-            activeTab === "completed"
+            activeTab === "delivered"
               ? "border-b-2 border-orange-600 font-semibold text-orange-600"
               : ""
           }`}
         >
           {" "}
-          Completed{" "}
+          Delivered{" "}
         </button>
       </div>
 
@@ -58,7 +58,7 @@ function Bids() {
             <Link
               key={bid._id}
               className="flex flex-col gap-y-3 bg-white pb-8 rounded-[16px] hover:scale-[1.04] transition-all shadow-md max-w-[700px] w-full px-4 sm:px-10"
-              to={`/client/${bid._id}/seeQuotes`}
+              to={`/client/${bid._id}/see-quotes`}
             >
               <div className="self-start font-semibold px-3 mt-4 sm:text-[16px] text-[15px]">
                 Bidding ID : {bid.bidNo}
@@ -99,8 +99,8 @@ function Bids() {
             </Link>
           ))}
 
-        {activeTab === "completed" &&
-          completedBids.map((bid) => (
+        {activeTab === "delivered" &&
+          deliveredBids.map((bid) => (
             <div
               key={bid._id}
               className="flex flex-col gap-y-3 bg-white pb-8 rounded-[16px] hover:scale-[1.04] transition-all shadow-md max-w-[700px] w-full px-4 sm:px-10"
@@ -208,7 +208,7 @@ function Bids() {
                   Phone: {bid.selectedTransporter?.phNo || "N/A"}
                 </div>
               </div>
-              {bid.status === "Awaiting detail confirmation" && (
+              {bid.status === "Awaiting Detail Confirmation" && (
                 <Link
                   to={`/client/${bid._id}/Details`}
                   className="text-white self-end p-2 bg-blue-500 rounded-md hover:cursor-pointer hover:bg-blue-400 w-fit"

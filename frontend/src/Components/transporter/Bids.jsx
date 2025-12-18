@@ -87,7 +87,7 @@ function Bids() {
               <button
                 className="mt-2 font-semibold bg-orange-500 px-2 text-[15px] hover:scale-[1.05] py-1.5 rounded-md hover:bg-orange-400 max-w-[200px] self-end"
                 onClick={() => {
-                  Navigate(`/transporter/${bid.bidNo}/postAQuote`);
+                  Navigate(`/transporter/${bid.bidNo}/post-a-quote`);
                 }}
               >
                 Quote a Price
@@ -134,9 +134,9 @@ function Bids() {
                 <div className="text-gray-600 text-[13px] sm:text-[16px]">
                   Load: {bid.load} tons
                 </div>
-                {bid.status === "Awaiting transport details" && (
+                {bid.status === "Awaiting Transport Details" && (
                   <Link
-                    to={`/transporter/${bid._id}/uploadDetails`}
+                    to={`/transporter/${bid._id}/upload-details`}
                     className=" self-end text-center px-3 font-semibold bg-orange-500 text-white py-1 rounded-lg text-[14px] hover:bg-orange-600 transition hover:scale-[1.03] shadow-md mt-2 w-fit hover:cursor-pointer"
                   >
                     {" "}

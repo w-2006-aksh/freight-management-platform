@@ -145,7 +145,7 @@ router.post(
 router.post("/signup", formDataValidator(clientSignUpSchema), handleSignUp);
 
 router.post(
-  "/login/requestOTP",
+  "/login/request-OTP",
   formDataValidator(requestOtpSchema),
   async (req, res, next) => {
     if (req.user != null) {

@@ -66,7 +66,6 @@ const bidSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    
 
     live: {
       type: Boolean,
@@ -76,13 +75,14 @@ const bidSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: [
-        "active",
-        "completed",
-        "Awaiting transport details",
-        "Awaiting detail confirmation",
-        "en route",
+        "Awaiting Pickup",
+        "Live",
+        "Delivered",
+        "Awaiting Transport Details",
+        "Awaiting Detail Confirmation",
+        "In Transit",
       ],
-      default: "active",
+      default: "Live",
     },
 
     finalPrice: {
@@ -90,6 +90,14 @@ const bidSchema = new mongoose.Schema(
     },
 
     transportDetails: transportDetailsSchema,
+    journey: [
+      {
+        city: String,
+        lat: Number,
+        lng: Number,
+        at: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );

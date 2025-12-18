@@ -8,12 +8,23 @@ const Bid = require("../models/bid");
 const getBidNo = require("../controllers/clientControllers/bidNo");
 const Quote = require("../models/quote");
 const createNewError = require("../util/createNewError");
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 const { getIO } = require("../config/socket.js");
+const confirmationOTPCollection = require("../models/confirmationOTP");
+
+const { generateTripToken } = require("../util/generateTripToken.js");
+
+const { addDriverLinkJob } = require("../queue/driverlink.js");
 
 const { NewBidBroadcastJob } = require("../queue/newBidBroadcast");
 const {
   addBidWinnerNotificationJob,
 } = require("../queue/bidWinnerNotifications");
+
+const {
+  addOTPDeliveryConfirmation,
+} = require("../queue/OTPDeliveryConfirmation.js");
 
 router.get("/getCities", (req, res, next) => {
   try {
@@ -24,7 +35,7 @@ router.get("/getCities", (req, res, next) => {
 });
 
 router.post(
-  "/postABid",
+  "/post-a-bid",
   formDataValidator(postABidSchema),
   async (req, res, next) => {
     try {
@@ -56,13 +67,13 @@ router.post(
   }
 );
 
-router.get("/liveBids", async (req, res, next) => {
+router.get("/live-bids", async (req, res, next) => {
   try {
     const pipeline = [
       {
         $match: {
           client: new Types.ObjectId(req.user._id),
-          status: "active",
+          status: "Live",
         },
       },
 
@@ -81,13 +92,13 @@ router.get("/liveBids", async (req, res, next) => {
   }
 });
 
-router.get("/completedBids", async (req, res, next) => {
+router.get("/delivered-bids", async (req, res, next) => {
   try {
     const pipeline = [
       {
         $match: {
           client: new Types.ObjectId(req.user._id.toString()),
-          status: "completed",
+          status: "Delivered",
         },
       },
 
@@ -111,20 +122,20 @@ router.get("/completedBids", async (req, res, next) => {
       },
     ];
 
-    const completedBids = await Bid.aggregate(pipeline);
-    return res.status(200).json({ success: true, completedBids });
+    const deliveredBids = await Bid.aggregate(pipeline);
+    return res.status(200).json({ success: true, deliveredBids });
   } catch (error) {
     return next(createNewError("Internal server error", 500));
   }
 });
 
-router.get("/inProgressBids", async (req, res, next) => {
+router.get("/in-progress-bids", async (req, res, next) => {
   try {
     const pipeline = [
       {
         $match: {
           client: new Types.ObjectId(req.user._id.toString()),
-          status: { $nin: ["active", "completed"] },
+          status: { $nin: ["Live", "Delivered"] },
         },
       },
       {
@@ -154,7 +165,7 @@ router.get("/inProgressBids", async (req, res, next) => {
   }
 });
 
-router.get("/:bidId/seeQuotes", async (req, res, next) => {
+router.get("/:bidId/see-quotes", async (req, res, next) => {
   try {
     const bidId = req.params.bidId;
     const bid = await Bid.findById(bidId);
@@ -176,12 +187,12 @@ router.get("/:bidId/seeQuotes", async (req, res, next) => {
   }
 });
 
-router.post("/:bidId/acceptQuote", async (req, res, next) => {
+router.post("/:bidId/accept-quote", async (req, res, next) => {
   try {
     const bidId = req.params.bidId;
     const bid = await Bid.findById(bidId);
 
-    if (bid.status != "active") {
+    if (bid.status != "Live") {
       return next(createNewError("Quote was already selected before", 409));
     }
 
@@ -192,7 +203,7 @@ router.post("/:bidId/acceptQuote", async (req, res, next) => {
       bidId,
       {
         selectedTransporter: transporter._id,
-        status: "Awaiting transport details",
+        status: "Awaiting Transport Details",
         importantForClient: false,
         finalPrice: quotedPrice,
         importantForTransporter: true,
@@ -227,26 +238,86 @@ router.get("/:bidId/Details", async (req, res, next) => {
   }
 });
 
-router.post("/:bidId/confirmDetails", async (req, res, next) => {
-  const bidId = req.params.bidId;
+router.post("/:bidId/confirm-details", async (req, res, next) => {
   try {
+    const bidId = req.params.bidId;
+
     const bid = await Bid.findById(bidId);
     if (!bid) {
       return next(createNewError("No such bid!", 404));
     }
 
-    if (bid.status !== "Awaiting detail confirmation") {
+    if (bid.status !== "Awaiting Detail Confirmation") {
       return next(createNewError("Cannot perform action!", 403));
     }
 
-    await Bid.updateOne(
-      { _id: bidId },
-      { status: "en route", importantForClient: false }
+    const updatedBid = await Bid.findByIdAndUpdate(
+      bidId,
+      {
+        status: "Awaiting Pickup",
+        importantForClient: false,
+      },
+      { new: true }
+    ).populate([
+      { path: "client", select: "phNo" },
+      { path: "selectedTransporter", select: "name email phNo" },
+    ]);
+
+    if (!updatedBid) {
+      return next(createNewError("Bid update failed", 500));
+    }
+
+    const OTP = crypto.randomInt(1000, 10000);
+    console.log("otp generated : ", OTP);
+    await confirmationOTPCollection.insertOne({
+      bidNo: updatedBid.bidNo,
+      OTP,
+    });
+
+    await addOTPDeliveryConfirmation(
+      OTP,
+      updatedBid.client.phNo,
+      updatedBid.transportDetails.driverPhNo,
+      updatedBid.bidNo
     );
-    return res.status(200).json({ success: true });
-  } catch {
+
+    const link = generateTripToken({
+      bidNo: updatedBid.bidNo,
+      from: updatedBid.from,
+      to: updatedBid.to,
+    });
+
+    console.log("link:", link);
+    await addDriverLinkJob(
+      updatedBid.transportDetails.driverPhNo,
+      updatedBid.bidNo,
+      link
+    );
+
+    return res.status(200).json({
+      success: true,
+      bid: updatedBid,
+    });
+  } catch (error) {
     return next(createNewError("Internal server error", 500));
   }
+});
+
+router.get("/:bidNo/journey", async (req, res) => {
+  const bidNo = Number(req.params.bidNo);
+
+  const bid = await Bid.findOne({ bidNo });
+  if (!bid) return res.sendStatus(404);
+
+  if (bid.client.toString() !== req.user._id.toString()) {
+    return res.sendStatus(403);
+  }
+
+  res.json({
+    success: true,
+    status: bid.status,
+    journey: bid.journey,
+  });
 });
 
 module.exports = router;

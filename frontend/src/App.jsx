@@ -21,6 +21,7 @@ import Details from "./Components/client/Details.jsx";
 import socket from "./Socket.jsx";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import JourneyTracking from "./Components/client/JourneyTracking.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -91,19 +92,20 @@ function App() {
           />
           <Route path="/signUpAsClient" element={<SignUpAsClient />} />
           <Route path="/signUpAs" element={<SignUpAs />} />
-          <Route path="/client/postABid" element={<PostABid />} />
+          <Route path="/client/post-a-bid" element={<PostABid />} />
           <Route path="/transporter/bids" element={<TransporterBids />} />
           <Route path="/client/bids" element={<ClientBids />} />
           <Route
-            path="/transporter/:bidNo/postAQuote"
+            path="/transporter/:bidNo/post-a-quote"
             element={<PostAQuote />}
           />
-          <Route path="/client/:bidId/seeQuotes" element={<SeeQuotes />} />
+          <Route path="/client/:bidId/see-quotes" element={<SeeQuotes />} />
           <Route
-            path="/transporter/:bidId/uploadDetails"
+            path="/transporter/:bidId/upload-details"
             element={<UploadDetails />}
           />
           <Route path="/client/:bidId/Details" element={<Details />} />
+          <Route path="/client/:bidNo/journey" element={<JourneyTracking />} />
         </Routes>
       </div>
     </>

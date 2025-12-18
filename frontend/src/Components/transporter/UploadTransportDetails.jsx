@@ -49,7 +49,7 @@ function uploadDetails() {
       formData.append("vehicleDocument", details.vehicleDocument);
 
       try {
-        const res = await apiCall(`/api/transporter/${bidId}/uploadDetails`, {
+        const res = await apiCall(`/api/transporter/${bidId}/upload-details`, {
           method: "POST",
           body: formData,
         });

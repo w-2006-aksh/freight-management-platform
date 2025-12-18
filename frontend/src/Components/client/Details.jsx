@@ -11,7 +11,7 @@ function Details() {
 
   const handleConfirmation = async () => {
     try {
-      const res = await apiCall(`/api/client/${bidId}/confirmDetails`, {
+      const res = await apiCall(`/api/client/${bidId}/confirm-details`, {
         method: "POST",
       });
       if (res.success === true) {
@@ -136,7 +136,7 @@ function Details() {
             )}
           </div>
         </div>
-        {bidData.status === "Awaiting detail confirmation" && (
+        {bidData.status === "Awaiting Detail Confirmation" && (
           <button
             onClick={handleConfirmation}
             className="bg-blue-500 p-2 rounded-md border-2 hover:bg-blue-400 hover:cursor-pointer"

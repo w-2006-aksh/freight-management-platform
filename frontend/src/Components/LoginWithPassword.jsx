@@ -34,7 +34,7 @@ function LoginWithPassword({ role }) {
       if (res.success) {
         dispatch(setUser(res.user)), dispatch(changeAuthenticationStatus(true));
         toast.success(res.message);
-        if (role == "client") navigate("/client/postABid");
+        if (role == "client") navigate("/client/post-a-bid");
         else navigate("/transporter/bids");
       } else {
       }

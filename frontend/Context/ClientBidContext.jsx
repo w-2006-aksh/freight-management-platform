@@ -9,22 +9,22 @@ export const getClientBidContext = () => useContext(ClientBidContext);
 export const ClientBidContextProvider = ({ children }) => {
   const [liveBids, setLiveBids] = useState([]);
   const [inProgressBids, setInProgressBids] = useState([]);
-  const [completedBids, setCompletedBids] = useState([]);
+  const [deliveredBids, setDeliveredBids] = useState([]);
 
   const userSlice = useSelector((state) => state.user);
 
   useEffect(() => {
     if (userSlice.isAuthenticated && userSlice.user?.role === "client") {
-      apiCall("/api/client/liveBids").then((res) => {
+      apiCall("/api/client/live-bids").then((res) => {
         if (res.success) setLiveBids(res.liveBids || []);
       });
-      apiCall("/api/client/inProgressBids").then((res) => {
+      apiCall("/api/client/in-progress-bids").then((res) => {
         if (res.success) setInProgressBids(res.inProgressBids || []);
       });
 
-      apiCall("/api/client/completedBids").then((res) => {
+      apiCall("/api/client/delivered-bids").then((res) => {
         if (res.success) {
-          setCompletedBids(res.completedBids);
+          setDeliveredBids(res.deliveredBids);
         }
       });
 
@@ -68,7 +68,7 @@ export const ClientBidContextProvider = ({ children }) => {
     }
   }, [userSlice.isAuthenticated, userSlice.user]);
 
-  const value = { liveBids, inProgressBids, completedBids };
+  const value = { liveBids, inProgressBids, deliveredBids };
 
   return (
     <ClientBidContext.Provider value={value}>

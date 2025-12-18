@@ -14,10 +14,10 @@ export const TransporterBidContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (userSlice.isAuthenticated && userSlice.user?.role === "transporter") {
-      apiCall("/api/transporter/liveBids").then((res) => {
+      apiCall("/api/transporter/live-bids").then((res) => {
         if (res.success) setLiveBids(res.liveBids || []);
       });
-      apiCall("/api/transporter/myBids").then((res) => {
+      apiCall("/api/transporter/my-bids").then((res) => {
         if (res.success) setMyBids(res.myBids || []);
       });
 

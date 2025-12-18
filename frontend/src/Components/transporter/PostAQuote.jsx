@@ -13,7 +13,7 @@ function PostAQuote() {
   useEffect(() => {
     const fetchBid = async () => {
       try {
-        const res = await apiCall(`/api/bids/getBidDetails/${bidNo}`);
+        const res = await apiCall(`/api/bids/get-bid-details/${bidNo}`);
         if (res.success) {
           setBid(res.bid);
         } else {
@@ -32,7 +32,7 @@ function PostAQuote() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await apiCall(`/api/transporter/${bidNo}/postAQuote`, {
+      const res = await apiCall(`/api/transporter/${bidNo}/post-a-quote`, {
         method: "POST",
         body: { quotedPrice },
       });
