@@ -64,6 +64,15 @@ function Navbar() {
                   </Link>
                 </li>
                 <li>
+                  <Link
+                    to="/client/manage-trusted-transporters"
+                    className="hover:text-orange-600 transition"
+                    onClick={() => setMenuOpen(!menuOpen)}
+                  >
+                    Manage Trusted Transporters
+                  </Link>
+                </li>
+                <li>
                   <button
                     className="bg-orange-500 text-white px-4 py-1.5 rounded-md hover:bg-orange-600 transition"
                     onClick={handleLogout}

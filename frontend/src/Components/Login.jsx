@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LoginWithOtp from "./LoginWithOtp";
+import LoginWithOTP from "./LoginWithOTP";
 import LoginWithPassword from "./LoginWithPassword";
 import { useParams } from "react-router-dom";
 
@@ -34,7 +34,7 @@ function Login() {
         </button>
       </div>
       {loginMode == "password" && <LoginWithPassword role={role} />}
-      {loginMode == "OTP" && <LoginWithOtp role={role} />}
+      {loginMode == "OTP" && <LoginWithOTP role={role} />}
     </div>
   );
 }

@@ -1,8 +1,8 @@
 const { Queue } = require("bullmq");
-const Transporter = require("../models/transporter");
+const Transporter = require("../model/transporter");
 const newBidBroadcastQueue = new Queue("new-bid-broadcast");
 
-async function NewBidBroadcastJob(bidNo) {
+async function newBidBroadcastJob(bidNo) {
   const transporters = await Transporter.find({});
   const jobs = [];
   transporters.forEach((transporter) => {
@@ -16,4 +16,4 @@ async function NewBidBroadcastJob(bidNo) {
   if (jobs.length > 0) await newBidBroadcastQueue.addBulk(jobs);
 }
 
-module.exports = { newBidBroadcastQueue, NewBidBroadcastJob };
+module.exports = { newBidBroadcastQueue, newBidBroadcastJob };

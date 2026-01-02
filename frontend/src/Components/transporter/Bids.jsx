@@ -1,36 +1,52 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
-import socket from "../../Socket.jsx";
 import { getTransporterBidContext } from "../../../Context/TransporterContext.jsx";
 
 function Bids() {
   const [activeTab, setActiveTab] = useState("live");
 
-  const { liveBids, myBids } = getTransporterBidContext();
+  const { liveBids, myBids, fetchLiveBids, fetchMyBids } =
+    getTransporterBidContext();
+  const navigate = useNavigate();
 
-  const Navigate = useNavigate();
+  const handleReject = async (bidId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to reject this bid?"
+    );
+    if (!confirmed) return;
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
+    try {
+      const res = await apiCall(`/api/transporter/bid/${bidId}/reject`, {
+        method: "POST",
+      });
+
+      if (res.success) {
+        await fetchLiveBids();
+        toast.success("Bid rejected");
+      }
+    } catch {
+      toast.error("Failed to reject bid");
+    }
   };
 
   return (
-    <div className="flex flex-col gap-4 px-6 py-3 w-full justify-center items-center font-sans">
-      <div className="flex flex-row gap-7 border-b border-black pt-3 pb-2 w-full justify-center max-w-[700px]">
+    <div className="flex flex-col gap-4 px-6 py-3 w-full items-center font-sans">
+      <div className="flex gap-7 border-b border-black pt-3 pb-2 w-full justify-center max-w-[700px]">
         <button
-          onClick={() => handleTabChange("live")}
+          onClick={() => setActiveTab("live")}
           className={`hover:text-orange-600 ${
             activeTab === "live"
-              ? " border-b-2 border-orange-600 font-semibold text-orange-600"
+              ? "border-b-2 border-orange-600 font-semibold text-orange-600"
               : ""
           }`}
         >
           Live Bids
         </button>
+
         <button
-          onClick={() => handleTabChange("myBids")}
+          onClick={() => setActiveTab("myBids")}
           className={`hover:text-orange-600 ${
             activeTab === "myBids"
               ? "border-b-2 border-orange-600 font-semibold text-orange-600"
@@ -42,105 +58,121 @@ function Bids() {
       </div>
 
       <div className="flex flex-col w-full items-center gap-y-4">
+        {activeTab === "live" && liveBids.length > 0 && (
+          <div className="max-w-[700px] w-full text-sm text-gray-600 italic text-center">
+            Showing up to 10 available bids. Quote or reject a bid to see more.
+          </div>
+        )}
+
+        {activeTab === "live" && liveBids.length === 0 && (
+          <div className="max-w-[700px] w-full text-center text-gray-500 py-10">
+            <div className="text-lg font-semibold">No live bids available</div>
+            <div className="text-sm mt-1">
+              You'll see bids here when clients invite you to quote.
+            </div>
+          </div>
+        )}
+
+        {}
         {activeTab === "live" &&
-          liveBids.map((bid) => (
-            <div
-              key={bid._id}
-              className="flex flex-col gap-y-3 bg-white pb-8 rounded-[16px] hover:scale-[1.04] transition-all shadow-md max-w-[700px] w-full px-4 sm:px-10"
-            >
-              <div className="self-start font-semibold px-3 mt-4 sm:text-[16px] text-[15px]">
-                Bidding ID : {bid.bidNo}
-              </div>
-              <div className="flex justify-between px-10">
-                <div className="flex flex-col items-center justify-center">
-                  <div className="text-center text-[15px] sm:text-[16px]">
-                    From
+          liveBids.map((invite) => {
+            const bid = invite.bid;
+
+            return (
+              <div
+                key={bid._id}
+                className="flex flex-col gap-y-3 bg-white pb-6 rounded-2xl shadow-md max-w-[700px] w-full px-4 sm:px-10"
+              >
+                <div className="font-semibold mt-4">
+                  Bidding ID : {bid.bidNo}
+                </div>
+
+                <div className="flex justify-between px-10">
+                  <div className="text-center">
+                    <div>From</div>
+                    <div className="font-semibold">{bid.from}</div>
+                    <div className="text-gray-500">
+                      {new Date(bid.startDate).toLocaleDateString()}
+                    </div>
                   </div>
-                  <div className="font-semibold text-[15px] sm:text-[16px]">
-                    {bid.from}
-                  </div>
-                  <div className="text-gray-500 text-[15px] sm:text-[16px]">
-                    {new Date(bid.startDate).toLocaleDateString()}
+
+                  <i className="fa-solid fa-truck-fast text-lg self-center"></i>
+
+                  <div className="text-center">
+                    <div>To</div>
+                    <div className="font-semibold">{bid.to}</div>
+                    <div className="text-gray-500">
+                      {new Date(bid.endDate).toLocaleDateString()}
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <i className="fa-solid fa-truck-fast text-lg"></i>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                  <div className="text-[15px] sm:text-[16px]">To</div>
-                  <div className="font-semibold text-[15px] sm:text-[16px]">
-                    {bid.to}
-                  </div>
-                  <div className="text-gray-500 text-[15px] sm:text-[16px]">
-                    {new Date(bid.endDate).toLocaleDateString()}
-                  </div>
-                </div>
-              </div>
-              <div className="pt-2 pr-4">
-                <div className="text-right font-semibold italic text-gray-600 text-[13px] sm:text-sm">
+
+                <div className="text-right text-sm text-gray-600">
                   Total Load:{" "}
-                  <span className="not-italic text-black">
+                  <span className="text-black font-semibold">
                     {bid.load.toLocaleString()} tons
                   </span>
                 </div>
+
+                <div className="flex gap-3 self-end">
+                  <button
+                    className="bg-orange-500 hover:bg-orange-400 text-white px-3 py-1.5 rounded-md font-semibold"
+                    onClick={() =>
+                      navigate(`/transporter/${bid.bidNo}/post-a-quote`)
+                    }
+                  >
+                    Quote
+                  </button>
+
+                  <button
+                    className="bg-red-500 hover:bg-red-400 text-white px-3 py-1.5 rounded-md font-semibold"
+                    onClick={() => handleReject(bid._id)}
+                  >
+                    Reject
+                  </button>
+                </div>
               </div>
-              <button
-                className="mt-2 font-semibold bg-orange-500 px-2 text-[15px] hover:scale-[1.05] py-1.5 rounded-md hover:bg-orange-400 max-w-[200px] self-end"
-                onClick={() => {
-                  Navigate(`/transporter/${bid.bidNo}/post-a-quote`);
-                }}
-              >
-                Quote a Price
-              </button>
-            </div>
-          ))}
+            );
+          })}
 
         {activeTab === "myBids" &&
           myBids.map((bid) => (
             <div
               key={bid._id}
-              className="flex flex-col gap-y-3 bg-white pb-8 rounded-[16px] hover:scale-[1.04] transition-all shadow-md max-w-[700px] w-full px-4 sm:px-10"
+              className="flex flex-col gap-y-3 bg-white pb-6 rounded-2xl shadow-md max-w-[700px] w-full px-4 sm:px-10"
             >
-              <div className="self-start font-semibold px-3 mt-4 sm:text-[16px] text-[15px]">
-                Bidding ID : {bid.bidNo}
-              </div>
+              <div className="font-semibold mt-4">Bidding ID : {bid.bidNo}</div>
+
               <div className="flex justify-between px-10">
-                <div className="flex flex-col items-center justify-center">
-                  <div className="text-center text-[15px] sm:text-[16px]">
-                    From
-                  </div>
-                  <div className="font-semibold text-[15px] sm:text-[16px]">
-                    {bid.from}
-                  </div>
+                <div className="text-center">
+                  <div>From</div>
+                  <div className="font-semibold">{bid.from}</div>
                 </div>
-                <div className="flex items-center">
-                  <i className="fa-solid fa-truck-fast text-lg"></i>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                  <div className="text-[15px] sm:text-[16px]">To</div>
-                  <div className="font-semibold text-[15px] sm:text-[16px]">
-                    {bid.to}
-                  </div>
+
+                <i className="fa-solid fa-truck-fast text-lg self-center"></i>
+
+                <div className="text-center">
+                  <div>To</div>
+                  <div className="font-semibold">{bid.to}</div>
                 </div>
               </div>
-              <div className="flex flex-col gap-1 self-end pt-2 pr-4 text-right">
-                <div className="font-semibold text-[13px] sm:text-[16px]">
+
+              <div className="text-right text-sm">
+                <div>
                   Status:{" "}
                   <span className="italic text-blue-600">{bid.status}</span>
                 </div>
-                <div className="text-gray-600 text-[13px] sm:text-[16px]">
+                <div>
                   Your Quote: ₹{bid.finalPrice?.toLocaleString() || "N/A"}
                 </div>
-                <div className="text-gray-600 text-[13px] sm:text-[16px]">
-                  Load: {bid.load} tons
-                </div>
+                <div>Load: {bid.load} tons</div>
+
                 {bid.status === "Awaiting Transport Details" && (
                   <Link
                     to={`/transporter/${bid._id}/upload-details`}
-                    className=" self-end text-center px-3 font-semibold bg-orange-500 text-white py-1 rounded-lg text-[14px] hover:bg-orange-600 transition hover:scale-[1.03] shadow-md mt-2 w-fit hover:cursor-pointer"
+                    className="inline-block mt-2 bg-orange-500 text-white px-3 py-1 rounded-lg font-semibold"
                   >
-                    {" "}
-                    Upload details{" "}
+                    Upload details
                   </Link>
                 )}
               </div>

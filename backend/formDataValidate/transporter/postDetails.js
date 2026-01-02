@@ -13,11 +13,9 @@ const postDetailsSchema = z
       .regex(/^[a-zA-Z\s]+$/, { message: "Name must have only characters" }),
 
     driverPhNo: z
-      .string({ required_error: "driver phone Number cannot be empty" })
+      .string({ required_error: "Phone is required" })
       .trim()
-      .min(10, { message: "Phone number must be exactly 10 digits" })
-      .max(10, { message: "Phone number must be exactly 10 digits" })
-      .regex(/^\d+$/, { message: "Phone number must only contain digits" }),
+      .regex(/^\d{10}$/, { message: "Phone number must be exactly 10 digits" }),
 
     vehicleNo: z
       .string({
@@ -32,4 +30,4 @@ const postDetailsSchema = z
     { message: "Incorrect vehicle number format!" }
   );
 
-module.exports = { postDetailsSchema };
+module.exports = postDetailsSchema;

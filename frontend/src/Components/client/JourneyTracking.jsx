@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import apiCall from "../../../util/apiCall";
 
 function prettifyCity(name) {
   return name.replace(/([a-z])([A-Z])/g, "$1 $2");
@@ -13,8 +14,8 @@ export default function JourneyTracking() {
   useEffect(() => {
     async function fetchJourney() {
       console.log(`/api/client/${bidNo}/journey`);
-      const res = await fetch(`/api/client/${bidNo}/journey`);
-      const data = await res.json();
+      const data = await apiCall(`/api/client/${bidNo}/journey`);
+
 
       if (data.success) {
         setJourney(data.journey || []);
@@ -81,7 +82,9 @@ export default function JourneyTracking() {
 
                   {isLast && (
                     <div className="mt-2 inline-block text-xs px-2 py-1 rounded bg-blue-50 text-blue-700">
-                      Current location
+                      {status === "In Transit"
+                        ? `Current Location`
+                        : `Delivered`}
                     </div>
                   )}
                 </div>

@@ -2,119 +2,131 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
+import { getTransporterBidContext } from "../../../Context/TransporterContext.jsx";
 
 function PostAQuote() {
   const { bidNo } = useParams();
-  const [quotedPrice, setQuotedPrice] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [bid, setBid] = useState(null);
   const navigate = useNavigate();
 
+  const [bid, setBid] = useState(null);
+  const [quotedPrice, setQuotedPrice] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { fetchLiveBids, fetchMyBids } = getTransporterBidContext();
+
   useEffect(() => {
-    const fetchBid = async () => {
+    const fetchBidDetails = async () => {
       try {
-        const res = await apiCall(`/api/bids/get-bid-details/${bidNo}`);
+        const res = await apiCall(`/api/transporter/get-bid-details/${bidNo}`);
+
         if (res.success) {
           setBid(res.bid);
         } else {
           navigate("/transporter/bids");
         }
       } catch (error) {
-        toast.error("Internal server error. Please try again later");
+        toast.error("Failed to load bid details");
         navigate("/transporter/bids");
       } finally {
         setLoading(false);
       }
     };
-    fetchBid();
+
+    fetchBidDetails();
   }, [bidNo, navigate]);
+
+  if (loading || !bid) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isSubmitting) return;
+
+    if (!quotedPrice || Number(quotedPrice) <= 0) return;
+
+    setIsSubmitting(true);
+
     try {
       const res = await apiCall(`/api/transporter/${bidNo}/post-a-quote`, {
         method: "POST",
         body: { quotedPrice },
       });
+
       if (res.success) {
+        await fetchLiveBids();
+        await fetchMyBids();
+
         toast.success("Quote sent successfully!");
         navigate("/transporter/bids");
       } else {
+        toast.error(res.message);
+        navigate("/transporter/bids");
+        await fetchLiveBids();
+
+        setIsSubmitting(false);
       }
     } catch (error) {
       toast.error("Internal server error. Please try again later.");
+      setIsSubmitting(false);
     }
   };
 
-  if (loading) {
-    return <div></div>;
-  }
-
   return (
     <div className="font-sans flex justify-center items-center h-full">
-      <div className="flex flex-col gap-y-6 bg-white py-5 px-2 sm:px-12 rounded-xl transition-all shadow-md max-w-[500px] w-full">
-        <div className="self-start font-semibold px-1 pt-3 sm:text-[18px] text-[15px] ">
-          Bidding ID: {bid.bidNo}
-        </div>
+      <div className="flex flex-col gap-y-6 bg-white py-5 px-2 sm:px-12 rounded-xl shadow-md max-w-[500px] w-full">
+        <div className="font-semibold pt-3">Bidding ID: {bid.bidNo}</div>
 
         <div className="flex px-10 justify-between">
-          <div className="flex flex-col justify-center items-center">
-            <div className="sm:text-[18px] text-[15px] text-center">From</div>
-            <div className="sm:text-[18px] text-[15px] font-semibold">
-              {bid.from}
-            </div>
-            <div className="sm:text-[18px] text-[15px] text-gray-500 whitespace-nowrap">
+          <div className="text-center">
+            <div>From</div>
+            <div className="font-semibold">{bid.from}</div>
+            <div className="text-gray-500">
               {new Date(bid.startDate).toLocaleDateString()}
             </div>
           </div>
-          <div className="flex items-center">
-            <i className="fa-solid fa-truck-fast"></i>
-          </div>
-          <div className="flex flex-col justify-center items-center">
-            <div className="sm:text-[18px] text-[15px]">To</div>
-            <div className="sm:text-[18px] text-[15px] font-semibold">
-              {bid.to}
-            </div>
-            <div className="sm:text-[18px] text-[15px] text-gray-500 whitespace-nowrap">
+
+          <i className="fa-solid fa-truck-fast self-center"></i>
+
+          <div className="text-center">
+            <div>To</div>
+            <div className="font-semibold">{bid.to}</div>
+            <div className="text-gray-500">
               {new Date(bid.endDate).toLocaleDateString()}
             </div>
           </div>
         </div>
 
-        <div className="pr-4 pt-2">
-          <div className="sm:text-sm text-[13px] text-gray-600 font-semibold italic">
-            Total Load:{" "}
-            <span className="text-black not-italic">{bid.load}</span>
-          </div>
+        <div className="text-right text-sm text-gray-600">
+          Total Load:{" "}
+          <span className="text-black font-semibold">{bid.load}</span>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col w-[500px] max-w-full mx-auto gap-y-2 bg-white px-10 py-10 rounded-xl text-[18px] lg:text-[18px]"
+          className="flex flex-col gap-y-2 px-10 py-6"
         >
-          <div className="flex flex-col gap-1 text-[15px] sm:text-[18px]">
-            <label htmlFor="quotedPrice">Quote a Price</label>
-            <input
-              type="text"
-              name="quotedPrice"
-              id="quotedPrice"
-              placeholder=""
-              className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              value={quotedPrice}
-              onChange={(e) => setQuotedPrice(e.target.value)}
-            />
-          </div>
+          <label htmlFor="quotedPrice">Quote a Price</label>
+          <input
+            type="number"
+            id="quotedPrice"
+            value={quotedPrice}
+            onChange={(e) => setQuotedPrice(e.target.value)}
+            className="border rounded px-2 py-1"
+          />
 
           <button
             type="submit"
-            className={`font-semibold hover:scale-[1.02] transition text-white p-2 text-[15px] sm:text-[18px] lg:text-[18px] mt-4 rounded-md ${
-              quotedPrice === "" || Number(quotedPrice) <= 0
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-orange-500 hover:bg-orange-400"
-            }`}
-            disabled={quotedPrice === "" || Number(quotedPrice) <= 0}
+            disabled={isSubmitting || !quotedPrice || Number(quotedPrice) <= 0}
+            className={`mt-4 p-2 rounded-md text-white font-semibold transition
+              ${
+                isSubmitting || !quotedPrice || Number(quotedPrice) <= 0
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-orange-500 hover:bg-orange-400"
+              }
+            `}
           >
-            Post Request
+            {isSubmitting ? "Posting..." : "Post Quote"}
           </button>
         </form>
       </div>

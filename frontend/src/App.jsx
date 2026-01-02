@@ -9,7 +9,7 @@ import SignUpAsTransporter from "./Components/transporter/Signup.jsx";
 import SignUpAs from "./Components/SignUpAs.jsx";
 import PostABid from "./Components/client/PostABid.jsx";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { changeAuthenticationStatus, setUser } from "./redux/slices/user.js";
 import TransporterBids from "./Components/transporter/Bids.jsx";
 import ClientBids from "./Components/client/Bids.jsx";
@@ -18,10 +18,9 @@ import PostAQuote from "./Components/transporter/PostAQuote.jsx";
 import SeeQuotes from "./Components/client/SeeQuotes.jsx";
 import UploadDetails from "./Components/transporter/UploadTransportDetails.jsx";
 import Details from "./Components/client/Details.jsx";
-import socket from "./Socket.jsx";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import JourneyTracking from "./Components/client/JourneyTracking.jsx";
+import ManageTrustedTransporters from "./Components/client/ManageTrustedTransporters.jsx";
 
 function App() {
   const dispatch = useDispatch();
@@ -45,36 +44,6 @@ function App() {
     };
     fetchUser();
   }, []);
-
-  useEffect(() => {
-    const onConnect = () => {
-      console.log("Socket connected with ID:", socket.id);
-      if (userSlice.isAuthenticated) {
-        socket.emit("join-user-room", userSlice.user._id);
-        if (userSlice.user.role === "transporter") {
-          socket.emit("join-transporters-room");
-        }
-      }
-    };
-
-    const handleNewBidToast = (bid) => {
-      if (userSlice.isAuthenticated && userSlice.user?.role === "transporter") {
-        toast.info(`A new bid is now live: bid ${bid.bidNo}`);
-      }
-    };
-
-    socket.on("connect", onConnect);
-    socket.on("new-bid-posted", handleNewBidToast);
-
-    if (socket.connected) {
-      onConnect();
-    }
-
-    return () => {
-      socket.off("connect", onConnect);
-      socket.off("new-bid-posted", handleNewBidToast);
-    };
-  }, [userSlice.isAuthenticated, userSlice.user]);
 
   return (
     <>
@@ -104,8 +73,12 @@ function App() {
             path="/transporter/:bidId/upload-details"
             element={<UploadDetails />}
           />
-          <Route path="/client/:bidId/Details" element={<Details />} />
+          <Route path="/client/:bidId/details" element={<Details />} />
           <Route path="/client/:bidNo/journey" element={<JourneyTracking />} />
+          <Route
+            path="/client/manage-trusted-transporters/"
+            element={<ManageTrustedTransporters />}
+          />
         </Routes>
       </div>
     </>

@@ -5,4 +5,4 @@ function generateTripToken({ bidNo, from, to }) {
     expiresIn: "3d",
   });
 }
-module.exports = { generateTripToken };
+module.exports = generateTripToken;

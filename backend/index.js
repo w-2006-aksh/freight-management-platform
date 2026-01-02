@@ -1,42 +1,59 @@
-const { createServer } = require("http");
-const { Server } = require("socket.io");
 require("dotenv").config();
-require("./config/redis");
-const mongoose = require("mongoose");
+
+const http = require("http");
 const express = require("express");
-const app = express();
-const httpServer = createServer(app);
+const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const PORT = process.env.PORT;
-const clientLoginAndSignUpRouter = require("./router/loginAndSignUp/client");
-const transporterLoginAndSignUpRouter = require("./router/loginAndSignUp/transporter");
-const { attachUserIfLoggedIn } = require("./middleware/attachUserIfLoggedIn");
+
+require("./config/redis");
+
+const { initSocket } = require("./config/socket");
+const attachUserIfLoggedIn = require("./middleware/attachUserIfLoggedIn");
+const roleAndAuthCheck = require("./middleware/roleAndAuthCheck");
+const errorHandler = require("./middleware/errorHandler");
+const verifyTripToken = require("./middleware/verifyTripToken");
+
+const clientAuthRouter = require("./router/loginAndSignUp/client");
+const transporterAuthRouter = require("./router/loginAndSignUp/transporter");
 const userRouter = require("./router/user");
 const clientRouter = require("./router/client");
 const transporterRouter = require("./router/transporter");
-const { roleAndAuthCheck } = require("./middleware/roleAndAuthCheck");
-const bidsRouter = require("./router/bid");
-const errorHandler = require("./middleware/errorHandler");
-const { initSocket } = require("./config/socket");
-const io = initSocket(httpServer);
+const tripRouter = require("./router/trip");
 
-app.use(express.json());
-app.use(cookieParser());
-app.use(attachUserIfLoggedIn);
+const PORT = process.env.PORT;
 
-app.use("/api/loginAndSignUp/client", clientLoginAndSignUpRouter);
-app.use("/api/loginAndSignUp/transporter", transporterLoginAndSignUpRouter);
-app.use("/api/client", roleAndAuthCheck("client"), clientRouter);
-app.use("/api/transporter", roleAndAuthCheck("transporter"), transporterRouter);
-app.use("/api/me", userRouter);
+async function startServer() {
+  const app = express();
+  const httpServer = http.createServer(app);
 
-app.use("/api/bids", bidsRouter);
-app.use(express.static("public"));
-app.use(errorHandler);
-mongoose.connect(process.env.MONGO_URI).then(() => {
-  console.log("mongooose connected");
-});
+  app.use(express.json());
+  app.use(cookieParser());
+  app.use(attachUserIfLoggedIn);
 
-httpServer.listen(PORT, "0.0.0.0", () => {
-  console.log("server is running!");
+  app.use("/api/loginAndSignUp/client", clientAuthRouter);
+  app.use("/api/loginAndSignUp/transporter", transporterAuthRouter);
+
+  app.use("/api/client", roleAndAuthCheck("client"), clientRouter);
+  app.use(
+    "/api/transporter",
+    roleAndAuthCheck("transporter"),
+    transporterRouter
+  );
+  app.use("/api/me", userRouter);
+  app.use("/api/trip", verifyTripToken, tripRouter);
+
+  app.use(express.static("public"));
+  app.use(errorHandler);
+
+  await mongoose.connect(process.env.MONGO_URI);
+  console.log("MongoDB connected");
+
+  httpServer.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+startServer().catch((err) => {
+  console.error("Server failed to start:", err);
+  process.exit(1);
 });

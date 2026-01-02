@@ -1,30 +1,33 @@
-import React, { use, useEffect } from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { setUser, changeAuthenticationStatus } from "../redux/slices/user";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import apiCall from "../../util/apiCall";
 
-function LoginWithOtp({ role }) {
+function LoginWithOTP({ role }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [allowSubmit, changeAllowSubmit] = useState(true);
-  const [otpSent, changeOtpSentStatus] = useState(false);
-  const [loginData, changeLoginData] = useState({
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [OTPSent, setOTPSent] = useState(false);
+
+  const [loginData, setLoginData] = useState({
     phNo: "",
     OTP: "",
   });
 
   const handleChange = (e) => {
-    changeLoginData({
-      ...loginData,
+    setLoginData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
-  const handleSendOtp = async (e) => {
-    changeAllowSubmit(false);
+  const handleSendOTP = async () => {
+    if (isSubmitting) return; 
+    setIsSubmitting(true);
+
     try {
       const res = await apiCall(
         `/api/loginAndSignUp/${role}/login/request-OTP`,
@@ -33,44 +36,53 @@ function LoginWithOtp({ role }) {
           body: { phNo: loginData.phNo },
         }
       );
+
       if (res.success) {
-        changeOtpSentStatus(true);
+        setOTPSent(true);
         toast.success("OTP sent!");
-      } else {
       }
     } catch (error) {
       toast.error("Internal server error");
     } finally {
-      changeAllowSubmit(true);
+      setIsSubmitting(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    changeAllowSubmit(false);
+
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     try {
-      const res = await apiCall(`/api/loginAndSignUp/${role}/login/otp`, {
+      const res = await apiCall(`/api/loginAndSignUp/${role}/login/OTP`, {
         method: "POST",
-        body: { phNo: loginData.phNo, OTP: loginData.OTP },
+        body: {
+          phNo: loginData.phNo,
+          OTP: loginData.OTP,
+        },
       });
 
       if (res.success) {
-        dispatch(setUser(res.user)), dispatch(changeAuthenticationStatus(true));
+        dispatch(setUser(res.user));
+        dispatch(changeAuthenticationStatus(true));
+
         toast.success(res.message);
-        if (role == "client") navigate("client/post-a-bid");
+
+        if (role === "client") navigate("/client/post-a-bid");
         else navigate("/transporter/bids");
-      } else {
       }
     } catch (error) {
       toast.error("Internal server error. Please try again later.");
     } finally {
-      changeAllowSubmit(true);
+      setIsSubmitting(false);
     }
   };
+
   const handleKeyPress = (e) => {
-    if (e.key == "Enter" && !otpSent) {
+    if (e.key === "Enter" && !OTPSent) {
       e.preventDefault();
-      handleSendOtp();
+      handleSendOTP();
     }
   };
 
@@ -81,24 +93,22 @@ function LoginWithOtp({ role }) {
         className="w-full max-w-md bg-white shadow-xl rounded-xl px-8 py-10 space-y-6"
       >
         <div className="flex flex-col">
-          {" "}
-          <label htmlFor="phNo" className="tex-gray-700 text-lg mb-1">
+          <label htmlFor="phNo" className="text-gray-700 text-lg mb-1">
             Phone number
           </label>
           <input
             type="tel"
             id="phNo"
-            readOnly={otpSent}
-            onKeyDown={handleKeyPress}
             name="phNo"
-            placeholder=""
             value={loginData.phNo}
+            readOnly={OTPSent}
+            onKeyDown={handleKeyPress}
             onChange={handleChange}
-            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none read-only:focus:ring-0 read-only:caret-transparent read-only:cursor-default read-only:bg-gray-100  focus:ring-2 focus:ring-orange-400 transition"
+            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none read-only:focus:ring-0 read-only:caret-transparent read-only:cursor-default read-only:bg-gray-100 focus:ring-2 focus:ring-orange-400 transition"
           />
         </div>
 
-        {otpSent && (
+        {OTPSent && (
           <div className="flex flex-col">
             <label htmlFor="OTP" className="text-gray-700 text-lg mb-1">
               Authentication code
@@ -108,26 +118,37 @@ function LoginWithOtp({ role }) {
               type="text"
               id="OTP"
               name="OTP"
-              placeholder=""
               value={loginData.OTP}
               onChange={handleChange}
               className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
             />
 
-            <div className="flex flex-row gap-x-2 mt-8">
+            <div className="flex gap-x-2 mt-8">
               <button
                 type="button"
-                disabled={!allowSubmit}
-                className="w-full bg-blue-500 hover:cursor-pointer text-white py-2 rounded-lg text-lg font-medium hover:bg-blue-600 transition hover:scale-[1.03] shadow-md disabled:bg-gray-300 cursor-none"
-                onClick={handleSendOtp}
+                disabled={isSubmitting}
+                onClick={handleSendOTP}
+                className={`w-full py-2 rounded-lg text-lg font-medium text-white transition shadow-md
+                  ${
+                    isSubmitting
+                      ? "bg-gray-300 cursor-not-allowed"
+                      : "bg-blue-500 hover:bg-blue-600 hover:scale-[1.03]"
+                  }
+                `}
               >
                 Resend OTP
               </button>
 
               <button
                 type="submit"
-                disabled={!allowSubmit}
-                className="w-full bg-orange-500 hover:cursor-pointer text-white py-2 rounded-lg text-lg font-medium hover:bg-orange-600 transition hover:scale-[1.03] shadow-md disabled:bg-gray-300 cursor-none"
+                disabled={isSubmitting}
+                className={`w-full py-2 rounded-lg text-lg font-medium text-white transition shadow-md
+                  ${
+                    isSubmitting
+                      ? "bg-gray-300 cursor-not-allowed"
+                      : "bg-orange-500 hover:bg-orange-600 hover:scale-[1.03]"
+                  }
+                `}
               >
                 Login
               </button>
@@ -135,12 +156,18 @@ function LoginWithOtp({ role }) {
           </div>
         )}
 
-        {!otpSent && (
+        {!OTPSent && (
           <button
             type="button"
-            disabled={!allowSubmit}
-            className="w-full bg-blue-500 hover:cursor-pointer text-white py-2 rounded-lg text-lg font-medium hover:bg-blue-600 transition hover:scale-[1.03] shadow-md disabled:bg-gray-300 cursor-none"
-            onClick={handleSendOtp}
+            disabled={isSubmitting}
+            onClick={handleSendOTP}
+            className={`w-full py-2 rounded-lg text-lg font-medium text-white transition shadow-md
+              ${
+                isSubmitting
+                  ? "bg-gray-300 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600 hover:scale-[1.03]"
+              }
+            `}
           >
             Send code
           </button>
@@ -150,4 +177,4 @@ function LoginWithOtp({ role }) {
   );
 }
 
-export default LoginWithOtp;
+export default LoginWithOTP;

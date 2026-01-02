@@ -16,9 +16,7 @@ const transporterSignUpSchema = z.object({
   phNo: z
     .string({ required_error: "Phone is required" })
     .trim()
-    .min(10, { message: "Phone number must be exactly 10 digits" })
-    .max(10, { message: "Phone number must be exactly 10 digits" })
-    .regex(/^\d+$/, { message: "Phone number must only contain digits" }),
+    .regex(/^\d{10}$/, { message: "Phone number must be exactly 10 digits" }),
 
   password: z
     .string({ required_error: "Password is required" })
@@ -39,4 +37,4 @@ const transporterSignUpSchema = z.object({
     .min(6, { message: "Address must be atleast 6 characters" }),
 });
 
-module.exports = { transporterSignUpSchema };
+module.exports = transporterSignUpSchema;

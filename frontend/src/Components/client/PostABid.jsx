@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
-import socket from "../../Socket.jsx";
+import { getClientBidContext } from "../../../Context/ClientBidContext";
+
 function PostABid() {
   const [cityData, setCityData] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const [bidData, setBidData] = useState({
     from: "",
@@ -15,10 +17,11 @@ function PostABid() {
     endDate: "",
   });
 
+  const { fetchLiveBids } = getClientBidContext();
+
   useEffect(() => {
     async function fetchCities() {
-      const res = await fetch("/api/client/getCities", { method: "GET" });
-      const data = await res.json();
+      const data = await apiCall("/api/client/getCities");
       setCityData(data.data);
     }
 
@@ -27,6 +30,9 @@ function PostABid() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
 
     try {
       const finalBidData = {
@@ -40,14 +46,16 @@ function PostABid() {
       });
 
       if (res.success) {
+        await fetchLiveBids();
         toast.success(res.message);
-        socket.emit("new-bid-posted", res.bid);
         navigate("/client/bids");
       } else {
+        setIsSubmitting(false);
         navigate("/client/post-a-bid");
       }
     } catch (error) {
-      toast.error("Internal server error! Please try agian later.");
+      toast.error("Internal server error! Please try again later.");
+      setIsSubmitting(false);
       navigate("/client/post-a-bid");
     }
   };
@@ -62,6 +70,11 @@ function PostABid() {
   return (
     <div className="bg-gray-100 flex flex-col items-center justify-center min-h-screen font-sans">
       <h1 className="text-4xl font-bold mb-10 text-center">Request a Quote</h1>
+
+      <div className="max-w-[500px] w-full text-sm text-gray-600 italic text-center mb-4">
+        Note: Bids automatically expire if a transporter is not finalized by the
+        day before the scheduled start date.
+      </div>
 
       <form
         onSubmit={handleSubmit}
@@ -153,9 +166,14 @@ function PostABid() {
 
         <button
           type="submit"
-          className="bg-orange-500 font-semibold hover:cursor-pointer hover:scale-[1.02] hover:bg-orange-400 transition text-white p-2 text-[18px] lg:text-xl mt-4 rounded-md"
+          disabled={isSubmitting}
+          className={`font-semibold transition text-white p-2 text-[18px] lg:text-xl mt-4 rounded-md ${
+            isSubmitting
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-orange-500 hover:scale-[1.02] hover:bg-orange-400"
+          }`}
         >
-          Post Request
+          {isSubmitting ? "Posting..." : "Post Request"}
         </button>
       </form>
     </div>

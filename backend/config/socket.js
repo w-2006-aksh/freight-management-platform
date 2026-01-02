@@ -10,11 +10,6 @@ function initSocket(httpServer) {
   io.on("connection", (socket) => {
     console.log(`user ${socket.id} connected!`);
 
-    socket.on("join-transporters-room", () => {
-      socket.join("transporters");
-      console.log(`transporter ${socket.id} joined the transporters room!`);
-    });
-
     socket.on("join-user-room", (userId) => {
       console.log(`user ${userId} joined their room`);
       socket.join(userId);

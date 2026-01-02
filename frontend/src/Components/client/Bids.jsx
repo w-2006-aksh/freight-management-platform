@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import apiCall from "../../../util/apiCall";
 import { getClientBidContext } from "../../../Context/ClientBidContext";
+
 function Bids() {
   const [activeTab, setActiveTab] = useState("live");
 
-  const Navigate = useNavigate();
-
-  const { liveBids, inProgressBids, deliveredBids } = getClientBidContext();
+  const {
+    liveBids,
+    inProgressBids,
+    deliveredBids,
+    expiredBids,
+    fetchDeliveredBids,
+    fetchInProgressBids,
+    fetchLiveBids,
+  } = getClientBidContext();
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
+
+  useEffect(() => {
+    fetchLiveBids();
+    fetchInProgressBids();
+    fetchDeliveredBids();
+  }, []);
 
   return (
     <div className="flex flex-col gap-4 px-6 py-3 w-full justify-center items-center font-sans">
@@ -25,9 +36,9 @@ function Bids() {
               : ""
           }`}
         >
-          {" "}
-          Live Bids{" "}
+          Live Bids
         </button>
+
         <button
           onClick={() => handleTabChange("inProgress")}
           className={`hover:text-orange-600 ${
@@ -36,9 +47,9 @@ function Bids() {
               : ""
           }`}
         >
-          {" "}
-          In Progress{" "}
+          In Progress
         </button>
+
         <button
           onClick={() => handleTabChange("delivered")}
           className={`hover:text-orange-600 ${
@@ -47,10 +58,36 @@ function Bids() {
               : ""
           }`}
         >
-          {" "}
-          Delivered{" "}
+          Delivered
+        </button>
+
+        <button
+          onClick={() => handleTabChange("expired")}
+          className={`hover:text-orange-600 ${
+            activeTab === "expired"
+              ? "border-b-2 border-orange-600 font-semibold text-orange-600"
+              : ""
+          }`}
+        >
+          Expired
         </button>
       </div>
+
+      {activeTab === "live" && liveBids.length === 0 && (
+        <div className="max-w-[700px] w-full text-center text-gray-500 py-10">
+          <div className="text-lg font-semibold">No live bids</div>
+          <div className="text-sm mt-1">
+            You will see your active bids here once created.
+          </div>
+        </div>
+      )}
+
+      {activeTab === "live" && liveBids.length > 0 && (
+        <div className="max-w-[700px] w-full text-center text-sm italic text-gray-600 mt-2">
+          Reminder: Bids must be finalized by the day before the start date or
+          they will expire automatically.
+        </div>
+      )}
 
       <div className="flex flex-col w-full items-center gap-y-4">
         {activeTab === "live" &&
@@ -63,7 +100,8 @@ function Bids() {
               <div className="self-start font-semibold px-3 mt-4 sm:text-[16px] text-[15px]">
                 Bidding ID : {bid.bidNo}
               </div>
-              <div className="flex [450px]-px-20 px-10 justify-between">
+
+              <div className="flex px-10 justify-between">
                 <div className="flex flex-col justify-center items-center">
                   <div className="sm:text-[16px] text-[15px] text-center">
                     From
@@ -75,9 +113,11 @@ function Bids() {
                     {new Date(bid.startDate).toLocaleDateString()}
                   </div>
                 </div>
+
                 <div className="flex items-center">
-                  <i className="fa-solid fa-truck-fast"></i>{" "}
+                  <i className="fa-solid fa-truck-fast"></i>
                 </div>
+
                 <div className="flex flex-col justify-center items-center">
                   <div className="sm:text-[16px] text-[15px]">To</div>
                   <div className="sm:text-[16px] text-[15px] font-semibold">
@@ -88,6 +128,7 @@ function Bids() {
                   </div>
                 </div>
               </div>
+
               <div className="pr-4 pt-2">
                 <div className="sm:text-sm text-[13px] text-gray-600 font-semibold italic text-right">
                   Total Load:{" "}
@@ -99,59 +140,14 @@ function Bids() {
             </Link>
           ))}
 
-        {activeTab === "delivered" &&
-          deliveredBids.map((bid) => (
-            <div
-              key={bid._id}
-              className="flex flex-col gap-y-3 bg-white pb-8 rounded-[16px] hover:scale-[1.04] transition-all shadow-md max-w-[700px] w-full px-4 sm:px-10"
-            >
-              <div className="self-start font-semibold px-3 mt-4 sm:text-[16px] text-[13px]">
-                Bidding ID : {bid.bidNo}
-              </div>
-              <div className="flex [450px]-px-20 px-10 justify-between">
-                <div className="flex flex-col justify-center items-center">
-                  <div className="sm:text-[16px] text-[15px] text-center">
-                    From
-                  </div>
-                  <div className="sm:text-[16px] text-[15px] font-semibold">
-                    {bid.from}
-                  </div>
-                  <div className="sm:text-[16px] text-[15px] text-gray-500">
-                    {new Date(bid.startDate).toLocaleDateString()}
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <i className="fa-solid fa-truck-fast"></i>{" "}
-                </div>
-                <div className="flex flex-col justify-center items-center">
-                  <div className="sm:text-[16px] text-[15px]">To</div>
-                  <div className="sm:text-[16px] text-[15px] font-semibold">
-                    {bid.to}
-                  </div>
-                  <div className="sm:text-[16px] text-[15px] text-gray-500">
-                    {new Date(bid.endDate).toLocaleDateString()}
-                  </div>
-                </div>
-              </div>
-              <div className="self-end text-right pr-4 pt-2 flex flex-col gap-1">
-                <div className="sm:text-[16px] text-[13px] font-semibold">
-                  Final Amount: ₹{bid.finalPrice?.toLocaleString() || "N/A"}
-                </div>
-                <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  Total Load: {bid.load} ton
-                </div>
-                <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  {bid.selectedTransporter?.name || "N/A"}
-                </div>
-                <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  Email: {bid.selectedTransporter?.email || "N/A"}
-                </div>
-                <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  Phone: {bid.selectedTransporter?.phNo || "N/A"}
-                </div>
-              </div>
+        {activeTab === "inProgress" && inProgressBids.length === 0 && (
+          <div className="max-w-[700px] w-full text-center text-gray-500 py-10">
+            <div className="text-lg font-semibold">No bids in progress</div>
+            <div className="text-sm mt-1">
+              Bids appear here after a transporter is finalized.
             </div>
-          ))}
+          </div>
+        )}
 
         {activeTab === "inProgress" &&
           inProgressBids.map((bid) => (
@@ -162,7 +158,8 @@ function Bids() {
               <div className="self-start font-semibold px-3 mt-4 sm:text-[16px] text-[13px]">
                 Bidding ID : {bid.bidNo}
               </div>
-              <div className="flex [450px]-px-20 px-10 justify-between">
+
+              <div className="flex px-10 justify-between">
                 <div className="flex flex-col justify-center items-center">
                   <div className="sm:text-[16px] text-[15px] text-center">
                     From
@@ -174,9 +171,11 @@ function Bids() {
                     {new Date(bid.startDate).toLocaleDateString()}
                   </div>
                 </div>
+
                 <div className="flex items-center">
-                  <i className="fa-solid fa-truck-fast"></i>{" "}
+                  <i className="fa-solid fa-truck-fast"></i>
                 </div>
+
                 <div className="flex flex-col justify-center items-center">
                   <div className="sm:text-[16px] text-[15px]">To</div>
                   <div className="sm:text-[16px] text-[15px] font-semibold">
@@ -187,35 +186,111 @@ function Bids() {
                   </div>
                 </div>
               </div>
+            </div>
+          ))}
+
+        {activeTab === "delivered" && deliveredBids.length === 0 && (
+          <div className="max-w-[700px] w-full text-center text-gray-500 py-10">
+            <div className="text-lg font-semibold">No delivered bids yet</div>
+            <div className="text-sm mt-1">
+              Completed shipments will appear here.
+            </div>
+          </div>
+        )}
+
+        {activeTab === "delivered" &&
+          deliveredBids.map((bid) => (
+            <div
+              key={bid._id}
+              className="flex flex-col gap-y-3 bg-white pb-8 rounded-[16px] hover:scale-[1.04] transition-all shadow-md max-w-[700px] w-full px-4 sm:px-10"
+            >
+              <div className="self-start font-semibold px-3 mt-4 sm:text-[16px] text-[13px]">
+                Bidding ID : {bid.bidNo}
+              </div>
+
+              <div className="flex px-10 justify-between">
+                <div className="flex flex-col justify-center items-center">
+                  <div className="sm:text-[16px] text-[15px] text-center">
+                    From
+                  </div>
+                  <div className="sm:text-[16px] text-[15px] font-semibold">
+                    {bid.from}
+                  </div>
+                  <div className="sm:text-[16px] text-[15px] text-gray-500">
+                    {new Date(bid.startDate).toLocaleDateString()}
+                  </div>
+                </div>
+
+                <div className="flex items-center">
+                  <i className="fa-solid fa-truck-fast"></i>
+                </div>
+
+                <div className="flex flex-col justify-center items-center">
+                  <div className="sm:text-[16px] text-[15px]">To</div>
+                  <div className="sm:text-[16px] text-[15px] font-semibold">
+                    {bid.to}
+                  </div>
+                  <div className="sm:text-[16px] text-[15px] text-gray-500">
+                    {new Date(bid.endDate).toLocaleDateString()}
+                  </div>
+                </div>
+              </div>
+
               <div className="self-end text-right pr-4 pt-2 flex flex-col gap-1">
                 <div className="sm:text-[16px] text-[13px] font-semibold">
                   Final Amount: ₹{bid.finalPrice?.toLocaleString() || "N/A"}
                 </div>
                 <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  status:{" "}
-                  <span className="text-blue-500 italic">{bid.status} </span>
-                </div>
-                <div className="sm:text-[16px] text-[13px] text-gray-600">
                   Total Load: {bid.load} ton
                 </div>
-                <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  {bid.selectedTransporter?.name || "N/A"}
+              </div>
+            </div>
+          ))}
+
+        {activeTab === "expired" && expiredBids.length > 0 && (
+          <div className="max-w-[700px] w-full text-center text-sm italic text-gray-600">
+            These bids expired because no transporter was finalized before the
+            cutoff.
+          </div>
+        )}
+
+        {activeTab === "expired" &&
+          expiredBids.map((bid) => (
+            <div
+              key={bid._id}
+              className="flex flex-col gap-y-3 bg-gray-50 pb-8 rounded-[16px] shadow-md max-w-[700px] w-full px-4 sm:px-10 opacity-80"
+            >
+              <div className="self-start font-semibold px-3 mt-4 sm:text-[16px] text-[13px]">
+                Bidding ID : {bid.bidNo}
+              </div>
+
+              <div className="flex px-10 justify-between">
+                <div className="flex flex-col justify-center items-center">
+                  <div className="sm:text-[16px] text-[15px] text-center">
+                    From
+                  </div>
+                  <div className="sm:text-[16px] text-[15px] font-semibold">
+                    {bid.from}
+                  </div>
+                  <div className="sm:text-[16px] text-[15px] text-gray-500">
+                    {new Date(bid.startDate).toLocaleDateString()}
+                  </div>
                 </div>
-                <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  Email: {bid.selectedTransporter?.email || "N/A"}
+
+                <div className="flex items-center">
+                  <i className="fa-solid fa-truck-fast text-gray-400"></i>
                 </div>
-                <div className="sm:text-[16px] text-[13px] text-gray-600">
-                  Phone: {bid.selectedTransporter?.phNo || "N/A"}
+
+                <div className="flex flex-col justify-center items-center">
+                  <div className="sm:text-[16px] text-[15px]">To</div>
+                  <div className="sm:text-[16px] text-[15px] font-semibold">
+                    {bid.to}
+                  </div>
+                  <div className="sm:text-[16px] text-[15px] text-gray-500">
+                    {new Date(bid.endDate).toLocaleDateString()}
+                  </div>
                 </div>
               </div>
-              {bid.status === "Awaiting Detail Confirmation" && (
-                <Link
-                  to={`/client/${bid._id}/Details`}
-                  className="text-white self-end p-2 bg-blue-500 rounded-md hover:cursor-pointer hover:bg-blue-400 w-fit"
-                >
-                  Confirm transport details
-                </Link>
-              )}
             </div>
           ))}
       </div>

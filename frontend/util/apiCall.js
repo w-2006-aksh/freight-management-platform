@@ -18,9 +18,6 @@ const apiCall = async (endpoint, options = {}) => {
 
   const res = await fetch(`${endpoint}`, config);
   const data = await res.json();
-  if (data.success == false) {
-    toast.error(data.message);
-  }
 
   return data;
 };

@@ -1,0 +1,171 @@
+Date : 2025-12-29 01:07:36
+Directory : c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project
+Total : 103 files,  14763 codes, 58 comments, 844 blanks, all 15665 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| JSON           |          6 |     10,214 |          0 |          6 |     10,220 |
+| JavaScript JSX |         24 |      2,338 |         13 |        337 |      2,688 |
+| JavaScript     |         67 |      2,181 |         45 |        493 |      2,719 |
+| HTML           |          1 |         20 |          0 |          1 |         21 |
+| Markdown       |          1 |          7 |          0 |          6 |         13 |
+| XML            |          2 |          2 |          0 |          0 |          2 |
+| PostCSS        |          2 |          1 |          0 |          1 |          2 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                             | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                |        103 |     14,763 |         58 |        844 |     15,665 |
+| . (Files)                                                                                                        |          1 |         13 |          0 |          1 |         14 |
+| backend                                                                                                          |         65 |      8,830 |         44 |        476 |      9,350 |
+| backend (Files)                                                                                                  |          3 |      2,713 |          8 |         17 |      2,738 |
+| backend\config                                                                                                   |          2 |         29 |          0 |         13 |         42 |
+| backend\controllers                                                                                              |         19 |      1,083 |         13 |        213 |      1,309 |
+| backend\controllers\client                                                                                       |          7 |        516 |          7 |         87 |        610 |
+| backend\controllers\common                                                                                       |          5 |        164 |          0 |         48 |        212 |
+| backend\controllers\transporter                                                                                  |          5 |        284 |          6 |         50 |        340 |
+| backend\controllers\trip                                                                                         |          2 |        119 |          0 |         28 |        147 |
+| backend\data                                                                                                     |          1 |      4,089 |          0 |          1 |      4,090 |
+| backend\formDataValidate                                                                                         |          7 |        146 |          0 |         39 |        185 |
+| backend\formDataValidate\client                                                                                  |          2 |         59 |          0 |         14 |         73 |
+| backend\formDataValidate\login                                                                                   |          3 |         26 |          0 |         11 |         37 |
+| backend\formDataValidate\transporter                                                                             |          2 |         61 |          0 |         14 |         75 |
+| backend\middleware                                                                                               |          6 |         83 |          0 |         26 |        109 |
+| backend\model                                                                                                    |          6 |        241 |         12 |         55 |        308 |
+| backend\queue                                                                                                    |          5 |         54 |          0 |         20 |         74 |
+| backend\router                                                                                                   |          6 |        128 |         11 |         52 |        191 |
+| backend\router (Files)                                                                                           |          4 |         70 |          3 |         28 |        101 |
+| backend\router\loginAndSignUp                                                                                    |          2 |         58 |          8 |         24 |         90 |
+| backend\storage                                                                                                  |          1 |         29 |          0 |          6 |         35 |
+| backend\util                                                                                                     |          3 |         32 |          0 |          8 |         40 |
+| backend\worker                                                                                                   |          6 |        203 |          0 |         26 |        229 |
+| frontend                                                                                                         |         37 |      5,920 |         14 |        367 |      6,301 |
+| frontend (Files)                                                                                                 |          6 |      3,518 |          1 |         15 |      3,534 |
+| frontend\Context                                                                                                 |          2 |         85 |          0 |         21 |        106 |
+| frontend\public                                                                                                  |          1 |          1 |          0 |          0 |          1 |
+| frontend\src                                                                                                     |         27 |      2,296 |         13 |        325 |      2,634 |
+| frontend\src (Files)                                                                                             |          5 |        110 |          3 |         12 |        125 |
+| frontend\src\Components                                                                                          |         19 |      2,144 |         10 |        305 |      2,459 |
+| frontend\src\Components (Files)                                                                                  |          7 |        503 |          0 |         63 |        566 |
+| frontend\src\Components\client                                                                                   |          7 |        946 |          6 |        138 |      1,090 |
+| frontend\src\Components\transporter                                                                              |          5 |        695 |          4 |        104 |        803 |
+| frontend\src\assets                                                                                              |          1 |          1 |          0 |          0 |          1 |
+| frontend\src\redux                                                                                               |          2 |         41 |          0 |          8 |         49 |
+| frontend\src\redux (Files)                                                                                       |          1 |          8 |          0 |          1 |          9 |
+| frontend\src\redux\slices                                                                                        |          1 |         33 |          0 |          7 |         40 |
+| frontend\util                                                                                                    |          1 |         20 |          0 |          6 |         26 |
++------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                                         | language       | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\config\redis.js                                        | JavaScript     |          4 |          0 |          4 |          8 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\config\socket.js                                       | JavaScript     |         25 |          0 |          9 |         34 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\client\auth.js                             | JavaScript     |         46 |          0 |         11 |         57 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\client\bid.js                              | JavaScript     |        313 |          4 |         40 |        357 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\client\index.js                            | JavaScript     |          8 |          0 |          1 |          9 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\client\journey.js                          | JavaScript     |         18 |          1 |          4 |         23 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\client\meta.js                             | JavaScript     |          9 |          0 |          3 |         12 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\client\quote.js                            | JavaScript     |         69 |          2 |         16 |         87 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\client\trustedTransporters.js              | JavaScript     |         53 |          0 |         12 |         65 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\common\checkExistingAccount.js             | JavaScript     |          7 |          0 |          3 |         10 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\common\loginWithOTP.js                     | JavaScript     |         59 |          0 |         16 |         75 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\common\loginWithPassword.js                | JavaScript     |         59 |          0 |         15 |         74 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\common\requestOTP.js                       | JavaScript     |         29 |          0 |         10 |         39 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\common\setAuthCookie.js                    | JavaScript     |         10 |          0 |          4 |         14 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\transporter\auth.js                        | JavaScript     |         48 |          4 |         11 |         63 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\transporter\bid.js                         | JavaScript     |        119 |          0 |         14 |        133 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\transporter\index.js                       | JavaScript     |          6 |          0 |          1 |          7 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\transporter\quote.js                       | JavaScript     |         60 |          0 |         14 |         74 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\transporter\upload.js                      | JavaScript     |         51 |          2 |         10 |         63 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\trip\index.js                              | JavaScript     |          3 |          0 |          1 |          4 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\controllers\trip\trip.js                               | JavaScript     |        116 |          0 |         27 |        143 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\data\cities.json                                       | JSON           |      4,089 |          0 |          1 |      4,090 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\formDataValidate\client\createBid.js                   | JavaScript     |         33 |          0 |          8 |         41 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\formDataValidate\client\signUp.js                      | JavaScript     |         26 |          0 |          6 |         32 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\formDataValidate\login\OTPLogin.js                     | JavaScript     |          9 |          0 |          4 |         13 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\formDataValidate\login\passwordLogin.js                | JavaScript     |          9 |          0 |          4 |         13 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\formDataValidate\login\requestOTP.js                   | JavaScript     |          8 |          0 |          3 |         11 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\formDataValidate\transporter\postDetails.js            | JavaScript     |         28 |          0 |          6 |         34 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\formDataValidate\transporter\signUp.js                 | JavaScript     |         33 |          0 |          8 |         41 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\index.js                                               | JavaScript     |         47 |          8 |         15 |         70 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\middleware\attachUserIfLoggedIn.js                     | JavaScript     |         15 |          0 |          3 |         18 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\middleware\errorHandler.js                             | JavaScript     |         12 |          0 |          5 |         17 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\middleware\formDataValidator.js                        | JavaScript     |         11 |          0 |          4 |         15 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\middleware\handleTransportDetailsUpload.js.js          | JavaScript     |         18 |          0 |          4 |         22 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\middleware\roleAndAuthCheck.js                         | JavaScript     |         13 |          0 |          5 |         18 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\middleware\verifyTripToken.js                          | JavaScript     |         14 |          0 |          5 |         19 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\model\bid.js                                           | JavaScript     |         81 |         12 |         20 |        113 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\model\bidInvitation.js                                 | JavaScript     |         20 |          0 |          3 |         23 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\model\client.js                                        | JavaScript     |         51 |          0 |         11 |         62 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\model\confirmationOTP.js                               | JavaScript     |         20 |          0 |          4 |         24 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\model\quote.js                                         | JavaScript     |         18 |          0 |          6 |         24 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\model\transporter.js                                   | JavaScript     |         51 |          0 |         11 |         62 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\package-lock.json                                      | JSON           |      2,634 |          0 |          1 |      2,635 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\package.json                                           | JSON           |         32 |          0 |          1 |         33 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\queue\OTPDeliveryConfirmation.js                       | JavaScript     |         12 |          0 |          4 |         16 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\queue\OTPLogin.js                                      | JavaScript     |          7 |          0 |          4 |         11 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\queue\bidWinnerNotifications.js                        | JavaScript     |          9 |          0 |          4 |         13 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\queue\driverLink.js                                    | JavaScript     |         10 |          0 |          4 |         14 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\queue\newBidBroadcast.js                               | JavaScript     |         16 |          0 |          4 |         20 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\router\client.js                                       | JavaScript     |         23 |          3 |         12 |         38 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\router\loginAndSignUp\client.js                        | JavaScript     |         29 |          4 |         12 |         45 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\router\loginAndSignUp\transporter.js                   | JavaScript     |         29 |          4 |         12 |         45 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\router\transporter.js                                  | JavaScript     |         18 |          0 |          8 |         26 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\router\trip.js                                         | JavaScript     |          9 |          0 |          4 |         13 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\router\user.js                                         | JavaScript     |         20 |          0 |          4 |         24 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\storage\multer.js                                      | JavaScript     |         29 |          0 |          6 |         35 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\util\createNewError.js                                 | JavaScript     |          8 |          0 |          2 |         10 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\util\generateTripToken.js                              | JavaScript     |          7 |          0 |          2 |          9 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\util\reverseGeoLocator.js                              | JavaScript     |         17 |          0 |          4 |         21 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\worker\OTPDeliveryConfirmation.js                      | JavaScript     |         39 |          0 |          4 |         43 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\worker\OTPLogin.js                                     | JavaScript     |         35 |          0 |          4 |         39 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\worker\bidWinnerNotification.js                        | JavaScript     |         37 |          0 |          4 |         41 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\worker\clearQueue.js                                   | JavaScript     |         17 |          0 |          5 |         22 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\worker\driverLink.js                                   | JavaScript     |         40 |          0 |          5 |         45 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\backend\worker\newBidBroadcast.js                              | JavaScript     |         35 |          0 |          4 |         39 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\Context\ClientBidContext.jsx                          | JavaScript JSX |         50 |          0 |         11 |         61 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\Context\TransporterContext.jsx                        | JavaScript JSX |         35 |          0 |         10 |         45 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\README.md                                             | Markdown       |          7 |          0 |          6 |         13 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\eslint.config.js                                      | JavaScript     |         28 |          0 |          2 |         30 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\index.html                                            | HTML           |         20 |          0 |          1 |         21 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\package-lock.json                                     | JSON           |      3,410 |          0 |          1 |      3,411 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\package.json                                          | JSON           |         36 |          0 |          1 |         37 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\public\vite.svg                                       | XML            |          1 |          0 |          0 |          1 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\App.css                                           | PostCSS        |          1 |          0 |          0 |          1 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\App.jsx                                           | JavaScript JSX |         83 |          0 |          6 |         89 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\Home.jsx                               | JavaScript JSX |         10 |          0 |          3 |         13 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\Login.jsx                              | JavaScript JSX |         39 |          0 |          4 |         43 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\LoginAs.jsx                            | JavaScript JSX |         34 |          0 |          4 |         38 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\LoginWithOTP.jsx                       | JavaScript JSX |        159 |          0 |         22 |        181 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\LoginWithPassword.jsx                  | JavaScript JSX |         97 |          0 |         14 |        111 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\Navbar.jsx                             | JavaScript JSX |        144 |          0 |          6 |        150 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\SignUpAs.jsx                           | JavaScript JSX |         20 |          0 |         10 |         30 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\client\Bids.jsx                        | JavaScript JSX |        236 |          0 |         29 |        265 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\client\Details.jsx                     | JavaScript JSX |        106 |          0 |         17 |        123 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\client\JourneyTracking.jsx             | JavaScript JSX |         82 |          4 |         13 |         99 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\client\ManageTrustedTransporters.jsx   | JavaScript JSX |        113 |          0 |         19 |        132 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\client\PostABid.jsx                    | JavaScript JSX |        159 |          0 |         20 |        179 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\client\SeeQuotes.jsx                   | JavaScript JSX |        119 |          2 |         21 |        142 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\client\Signup.jsx                      | JavaScript JSX |        131 |          0 |         19 |        150 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\transporter\Bids.jsx                   | JavaScript JSX |        153 |          4 |         24 |        181 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\transporter\Login.jsx                  | JavaScript JSX |        110 |          0 |         17 |        127 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\transporter\PostAQuote.jsx             | JavaScript JSX |        114 |          0 |         24 |        138 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\transporter\Signup.jsx                 | JavaScript JSX |        135 |          0 |         18 |        153 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Components\transporter\UploadTransportDetails.jsx | JavaScript JSX |        183 |          0 |         21 |        204 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\Socket.jsx                                        | JavaScript JSX |          0 |          3 |          3 |          6 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\assets\react.svg                                  | XML            |          1 |          0 |          0 |          1 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\index.css                                         | PostCSS        |          0 |          0 |          1 |          1 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\main.jsx                                          | JavaScript JSX |         26 |          0 |          2 |         28 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\redux\slices\user.js                              | JavaScript     |         33 |          0 |          7 |         40 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\src\redux\store.js                                    | JavaScript     |          8 |          0 |          1 |          9 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\util\apiCall.js                                       | JavaScript     |         20 |          0 |          6 |         26 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\frontend\vite.config.js                                        | JavaScript     |         17 |          1 |          4 |         22 |
+| c:\Users\akshw\OneDrive\Desktop\ExpressJS\Project\package-lock.json                                              | JSON           |         13 |          0 |          1 |         14 |
+| Total                                                                                                            |                |     14,763 |         58 |        844 |     15,665 |
++------------------------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
