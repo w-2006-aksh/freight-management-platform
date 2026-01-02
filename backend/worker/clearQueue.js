@@ -8,7 +8,7 @@ const connection = {
 };
 
 async function clearQueue() {
-  const queue = new Queue("driver-link-job", { connection });
+  const queue = new Queue("driver-link-queue", { connection });
 
   await queue.drain(true);
   await queue.clean(0, 1000, "completed");

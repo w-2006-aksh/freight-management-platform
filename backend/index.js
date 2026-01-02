@@ -10,7 +10,6 @@ require("./config/redis");
 const attachUserIfLoggedIn = require("./middleware/attachUserIfLoggedIn");
 const roleAndAuthCheck = require("./middleware/roleAndAuthCheck");
 const errorHandler = require("./middleware/errorHandler");
-const verifyTripToken = require("./middleware/verifyTripToken");
 
 const clientAuthRouter = require("./router/loginAndSignUp/client");
 const transporterAuthRouter = require("./router/loginAndSignUp/transporter");
@@ -41,7 +40,7 @@ async function startServer() {
     transporterRouter
   );
   app.use("/api/me", userRouter);
-  app.use("/api/trip", verifyTripToken, tripRouter);
+  app.use("/api/trip", tripRouter);
 
   app.use(express.static("public"));
   app.use(errorHandler);

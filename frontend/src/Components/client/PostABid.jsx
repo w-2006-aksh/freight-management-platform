@@ -73,7 +73,7 @@ function PostABid() {
 
       <div className="max-w-[500px] w-full text-sm text-gray-600 italic text-center mb-4">
         Note: Bids automatically expire if a transporter is not finalized by the
-        day before the scheduled start date.
+        scheduled start date.
       </div>
 
       <form
@@ -117,7 +117,7 @@ function PostABid() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="load">Load capacity</label>
+          <label htmlFor="load">Load capacity (tons)</label>
           <input
             type="number"
             name="load"

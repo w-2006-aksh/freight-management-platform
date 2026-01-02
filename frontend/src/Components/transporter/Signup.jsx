@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
+import { useNavigate } from "react-router-dom";
 
 function SignUpAsTransporter() {
   const [userData, setUserData] = useState({
@@ -12,6 +13,7 @@ function SignUpAsTransporter() {
     password: "",
   });
 
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
@@ -36,6 +38,7 @@ function SignUpAsTransporter() {
 
       if (res.success) {
         toast.success(res.message);
+        navigate("/login/transporter");
       } else {
         toast.error(res.message || "Signup failed");
         setIsSubmitting(false);

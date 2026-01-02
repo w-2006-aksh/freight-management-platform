@@ -18,7 +18,6 @@ import PostAQuote from "./Components/transporter/PostAQuote.jsx";
 import SeeQuotes from "./Components/client/SeeQuotes.jsx";
 import UploadDetails from "./Components/transporter/UploadTransportDetails.jsx";
 import Details from "./Components/client/Details.jsx";
-import { toast } from "react-toastify";
 import JourneyTracking from "./Components/client/JourneyTracking.jsx";
 import ManageTrustedTransporters from "./Components/client/ManageTrustedTransporters.jsx";
 

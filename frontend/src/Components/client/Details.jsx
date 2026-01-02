@@ -94,11 +94,37 @@ function Details() {
           <h1 className="font-semibold text-[18px]">Driver Details</h1>
           <div>Name: {bidData.transportDetails?.driverName || "N/A"}</div>
           <div>Phone: {bidData.transportDetails?.driverPhNo || "N/A"}</div>
+          {bidData.transportDetails && (
+            <div className="pt-2 text-orange-500 hover:underline">
+              <a
+                href={`http://localhost:8000/${bidData.transportDetails.driverLicenseUrl.replace(
+                  /\\/g,
+                  "/"
+                )}`}
+                target="_blank"
+              >
+                View driver license
+              </a>
+            </div>
+          )}
         </div>
 
         <div className="bg-white w-full sm:w-[700px] p-4 rounded-md">
           <h1 className="font-semibold text-[18px]">Vehicle Details</h1>
           <div>Number: {bidData.transportDetails?.vehicleNo || "N/A"}</div>
+          {bidData.transportDetails && (
+            <div className="pt-2 text-orange-500 hover:underline">
+              <a
+                href={`http://localhost:8000/${bidData.transportDetails.vehicleDocumentUrl.replace(
+                  /\\/g,
+                  "/"
+                )}`}
+                target="_blank"
+              >
+                View Registration details
+              </a>
+            </div>
+          )}
         </div>
 
         {bidData.status === "Awaiting Detail Confirmation" && (

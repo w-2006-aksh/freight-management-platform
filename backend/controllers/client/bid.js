@@ -296,7 +296,7 @@ exports.confirmDetails = async (req, res, next) => {
       updatedBid.bidNo
     );
 
-    const link = generateTripToken({
+    const token = generateTripToken({
       bidNo: updatedBid.bidNo,
       from: updatedBid.from,
       to: updatedBid.to,
@@ -305,7 +305,7 @@ exports.confirmDetails = async (req, res, next) => {
     await addDriverLinkJob(
       updatedBid.transportDetails.driverPhNo,
       updatedBid.bidNo,
-      link
+      token
     );
 
     return res.status(200).json({ success: true, bid: updatedBid });

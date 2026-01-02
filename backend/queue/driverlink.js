@@ -2,11 +2,11 @@ const { Queue } = require("bullmq");
 
 const driverLinkQueue = new Queue("driver-link-queue");
 
-async function addDriverLinkJob(phNo, bidNo, link) {
+async function addDriverLinkJob(phNo, bidNo, token) {
   await driverLinkQueue.add("driver-link-job", {
     phNo,
     bidNo,
-    link,
+    token,
   });
 
   console.log("[QUEUE] driver-link job enqueued bidNo=%s", bidNo);

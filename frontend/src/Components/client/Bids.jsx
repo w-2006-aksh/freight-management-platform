@@ -84,8 +84,8 @@ function Bids() {
 
       {activeTab === "live" && liveBids.length > 0 && (
         <div className="max-w-[700px] w-full text-center text-sm italic text-gray-600 mt-2">
-          Reminder: Bids must be finalized by the day before the start date or
-          they will expire automatically.
+          Reminder: Bids must be finalized before the start date or they will
+          expire automatically.
         </div>
       )}
 
@@ -158,8 +158,7 @@ function Bids() {
               <div className="self-start font-semibold px-3 mt-4 sm:text-[16px] text-[13px]">
                 Bidding ID : {bid.bidNo}
               </div>
-
-              <div className="flex px-10 justify-between">
+              <div className="flex [450px]-px-20 px-10 justify-between">
                 <div className="flex flex-col justify-center items-center">
                   <div className="sm:text-[16px] text-[15px] text-center">
                     From
@@ -171,11 +170,9 @@ function Bids() {
                     {new Date(bid.startDate).toLocaleDateString()}
                   </div>
                 </div>
-
                 <div className="flex items-center">
-                  <i className="fa-solid fa-truck-fast"></i>
+                  <i className="fa-solid fa-truck-fast"></i>{" "}
                 </div>
-
                 <div className="flex flex-col justify-center items-center">
                   <div className="sm:text-[16px] text-[15px]">To</div>
                   <div className="sm:text-[16px] text-[15px] font-semibold">
@@ -186,6 +183,43 @@ function Bids() {
                   </div>
                 </div>
               </div>
+              <div className="self-end text-right pr-4 pt-2 flex flex-col gap-1">
+                <div className="sm:text-[16px] text-[13px] font-semibold">
+                  Final Amount: ₹{bid.finalPrice?.toLocaleString() || "N/A"}
+                </div>
+                <div className="sm:text-[16px] text-[13px] text-gray-600">
+                  status:{" "}
+                  <span className="text-blue-500 italic">{bid.status} </span>
+                </div>
+                <div className="sm:text-[16px] text-[13px] text-gray-600">
+                  Total Load: {bid.load} ton
+                </div>
+                <div className="sm:text-[16px] text-[13px] text-gray-600">
+                  {bid.selectedTransporter?.name || "N/A"}
+                </div>
+                <div className="sm:text-[16px] text-[13px] text-gray-600">
+                  Email: {bid.selectedTransporter?.email || "N/A"}
+                </div>
+                <div className="sm:text-[16px] text-[13px] text-gray-600">
+                  Phone: {bid.selectedTransporter?.phNo || "N/A"}
+                </div>
+              </div>
+              {bid.status === "Awaiting Detail Confirmation" && (
+                <Link
+                  to={`/client/${bid._id}/Details`}
+                  className="text-white self-end p-2 bg-blue-500 rounded-md hover:cursor-pointer hover:bg-blue-400 w-fit"
+                >
+                  Confirm transport details
+                </Link>
+              )}
+              {bid.status === "In Transit" && (
+                <Link
+                  to={`/client/${bid.bidNo}/journey`}
+                  className="text-white self-end p-2 bg-blue-500 rounded-md hover:cursor-pointer hover:bg-blue-400 w-fit"
+                >
+                  Track shipping
+                </Link>
+              )}
             </div>
           ))}
 
@@ -207,8 +241,7 @@ function Bids() {
               <div className="self-start font-semibold px-3 mt-4 sm:text-[16px] text-[13px]">
                 Bidding ID : {bid.bidNo}
               </div>
-
-              <div className="flex px-10 justify-between">
+              <div className="flex [450px]-px-20 px-10 justify-between">
                 <div className="flex flex-col justify-center items-center">
                   <div className="sm:text-[16px] text-[15px] text-center">
                     From
@@ -220,11 +253,9 @@ function Bids() {
                     {new Date(bid.startDate).toLocaleDateString()}
                   </div>
                 </div>
-
                 <div className="flex items-center">
-                  <i className="fa-solid fa-truck-fast"></i>
+                  <i className="fa-solid fa-truck-fast"></i>{" "}
                 </div>
-
                 <div className="flex flex-col justify-center items-center">
                   <div className="sm:text-[16px] text-[15px]">To</div>
                   <div className="sm:text-[16px] text-[15px] font-semibold">
@@ -235,13 +266,21 @@ function Bids() {
                   </div>
                 </div>
               </div>
-
               <div className="self-end text-right pr-4 pt-2 flex flex-col gap-1">
                 <div className="sm:text-[16px] text-[13px] font-semibold">
                   Final Amount: ₹{bid.finalPrice?.toLocaleString() || "N/A"}
                 </div>
                 <div className="sm:text-[16px] text-[13px] text-gray-600">
                   Total Load: {bid.load} ton
+                </div>
+                <div className="sm:text-[16px] text-[13px] text-gray-600">
+                  {bid.selectedTransporter?.name || "N/A"}
+                </div>
+                <div className="sm:text-[16px] text-[13px] text-gray-600">
+                  Email: {bid.selectedTransporter?.email || "N/A"}
+                </div>
+                <div className="sm:text-[16px] text-[13px] text-gray-600">
+                  Phone: {bid.selectedTransporter?.phNo || "N/A"}
                 </div>
               </div>
             </div>

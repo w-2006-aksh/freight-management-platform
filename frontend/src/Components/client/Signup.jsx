@@ -46,7 +46,7 @@ function SignUpAsClient() {
 
       if (res.success) {
         toast.success(res.message);
-        navigate("/login");
+        navigate("/login/client");
       } else {
         toast.error(res.message);
         setIsSubmitting(false);

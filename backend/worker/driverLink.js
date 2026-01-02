@@ -11,8 +11,10 @@ const client = twilio(accountSid, authToken);
 const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 
 const driverLinkJobProcessor = async (job) => {
-  const { phNo, bidNo, link } = job.data;
-
+  const { phNo, bidNo, token } = job.data;
+  const link = `http://172.20.10.3:8000/api/trip/open/${bidNo}?token=${encodeURIComponent(
+    token
+  )}`;
   try {
     await client.messages.create({
       body: `Link for bid ${bidNo} is: ${link}`,

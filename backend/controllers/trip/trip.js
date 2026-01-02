@@ -30,7 +30,6 @@ exports.getTripDetails = async (req, res, next) => {
 exports.getTripStatus = async (req, res, next) => {
   try {
     const bidNo = Number(req.params.bidNo);
-
     if (req.trip.bidNo !== bidNo) {
       throw createNewError("Unauthorized", 403);
     }
@@ -138,4 +137,15 @@ exports.updateLocation = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+exports.openBidInApp = (req, res) => {
+  const { bidNo } = req.params;
+  const token = req.query.token;
+
+  if (!token) {
+    return res.status(400).send("Invalid link");
+  }
+
+  res.redirect(`gpslocator://bid?bidNo=${bidNo}&token=${token}`);
 };

@@ -106,7 +106,10 @@ function PostAQuote() {
           onSubmit={handleSubmit}
           className="flex flex-col gap-y-2 px-10 py-6"
         >
-          <label htmlFor="quotedPrice">Quote a Price</label>
+          <label htmlFor="quotedPrice">
+            Quote Total Price (for entire shipment)
+          </label>
+
           <input
             type="number"
             id="quotedPrice"
