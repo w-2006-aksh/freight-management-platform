@@ -33,7 +33,6 @@ function App() {
           method: "GET",
         });
         const data = await res.json();
-        console.log(data);
         if (data.success) {
           dispatch(changeAuthenticationStatus(true));
           dispatch(setUser(data.user));

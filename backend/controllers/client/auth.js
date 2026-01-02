@@ -45,7 +45,6 @@ exports.signUp = async (req, res, next) => {
       email,
       name,
     });
-
     return res.status(200).json({
       success: true,
       message: "Sign Up successful. Proceed to log in",

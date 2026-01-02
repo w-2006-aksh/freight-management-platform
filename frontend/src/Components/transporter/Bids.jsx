@@ -73,7 +73,6 @@ function Bids() {
           </div>
         )}
 
-        {}
         {activeTab === "live" &&
           liveBids.map((invite) => {
             const bid = invite.bid;

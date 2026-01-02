@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 
 require("./config/redis");
 
-const { initSocket } = require("./config/socket");
 const attachUserIfLoggedIn = require("./middleware/attachUserIfLoggedIn");
 const roleAndAuthCheck = require("./middleware/roleAndAuthCheck");
 const errorHandler = require("./middleware/errorHandler");
@@ -23,6 +22,8 @@ const tripRouter = require("./router/trip");
 const PORT = process.env.PORT;
 
 async function startServer() {
+  console.log("[BOOT] starting server");
+
   const app = express();
   const httpServer = http.createServer(app);
 
@@ -46,14 +47,14 @@ async function startServer() {
   app.use(errorHandler);
 
   await mongoose.connect(process.env.MONGO_URI);
-  console.log("MongoDB connected");
+  console.log("[DB] MongoDB connected");
 
   httpServer.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log("[SERVER] listening on port", PORT);
   });
 }
 
 startServer().catch((err) => {
-  console.error("Server failed to start:", err);
+  console.error("server failed to start", err);
   process.exit(1);
 });

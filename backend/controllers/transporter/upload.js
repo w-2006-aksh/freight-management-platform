@@ -1,6 +1,5 @@
 const Bid = require("../../model/bid");
 const createNewError = require("../../util/createNewError");
-const { getIO } = require("../../config/socket");
 
 exports.uploadDetails = async (req, res, next) => {
   try {
@@ -46,10 +45,6 @@ exports.uploadDetails = async (req, res, next) => {
       },
       { new: true }
     ).populate("selectedTransporter", "name email phNo");
-
-    const io = getIO();
-    io.to(updatedBid.client.toString()).emit("details-uploaded", updatedBid);
-    io.to(req.user._id.toString()).emit("details-uploaded", updatedBid);
 
     return res
       .status(200)

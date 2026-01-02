@@ -1,7 +1,6 @@
 const Bid = require("../../model/bid");
 const Quote = require("../../model/quote");
 const createNewError = require("../../util/createNewError");
-const { getIO } = require("../../config/socket");
 
 const {
   addBidWinnerNotificationJob,
@@ -72,8 +71,6 @@ exports.acceptQuote = async (req, res, next) => {
       { new: true }
     ).populate("selectedTransporter", "phNo email name");
 
-    const io = getIO();
-    io.to(transporter._id).emit("bid-won", updatedBid);
 
     await addBidWinnerNotificationJob(bid.bidNo, transporter.phNo);
 

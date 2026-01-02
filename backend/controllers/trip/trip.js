@@ -28,7 +28,6 @@ exports.getTripDetails = async (req, res, next) => {
 };
 
 exports.getTripStatus = async (req, res, next) => {
-  console.log("!req received for bid status!!!");
   try {
     const bidNo = Number(req.params.bidNo);
 

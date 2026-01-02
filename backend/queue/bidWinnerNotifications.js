@@ -7,6 +7,8 @@ async function addBidWinnerNotificationJob(bidNo, phNo) {
     bidNo,
     phNo,
   });
+
+  console.log("[QUEUE] bid-winner-notification enqueued bidNo=%s", bidNo);
 }
 
 module.exports = { bidWinnerNotificationQueue, addBidWinnerNotificationJob };

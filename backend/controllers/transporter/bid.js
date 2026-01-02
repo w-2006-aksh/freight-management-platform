@@ -52,7 +52,6 @@ exports.getLiveBids = async (req, res, next) => {
         },
       },
     ]);
-    console.log(liveBids);
     return res.status(200).json({
       success: true,
       liveBids,
@@ -137,7 +136,6 @@ exports.getBidDetails = async (req, res, next) => {
 };
 
 exports.rejectBid = async (req, res, next) => {
-  console.log("reject bid req rec");
   try {
     const bidId = req.params.bidId;
     const transporterId = req.user._id;

@@ -3,7 +3,6 @@ const { Types } = require("mongoose");
 const Bid = require("../../model/bid");
 const Quote = require("../../model/quote");
 const createNewError = require("../../util/createNewError");
-const { getIO } = require("../../config/socket");
 const bidInvitation = require("../../model/bidInvitation");
 
 exports.postQuote = async (req, res, next) => {
@@ -43,15 +42,6 @@ exports.postQuote = async (req, res, next) => {
       bidNo,
       transporter: new Types.ObjectId(transporterId),
     });
-
-    const populatedQuote = await quote.populate(
-      "transporter",
-      "name email phNo"
-    );
-
-    const io = getIO();
-    io.to(transporterId.toString()).emit("quote-submitted", { bidNo });
-    io.to(bid.client._id.toString()).emit("new-quote", populatedQuote);
 
     const quoteCount = await Quote.countDocuments({ bidNo });
 

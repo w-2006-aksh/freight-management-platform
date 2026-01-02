@@ -56,7 +56,6 @@ function ManageTrustedTransporters() {
 
       toast.success("Trusted transporters updated successfully");
     } catch (err) {
-      console.log(err);
       toast.error("Failed to save trusted transporters");
     } finally {
       setIsSubmitting(false);

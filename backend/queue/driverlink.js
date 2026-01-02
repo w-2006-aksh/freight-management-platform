@@ -8,6 +8,8 @@ async function addDriverLinkJob(phNo, bidNo, link) {
     bidNo,
     link,
   });
+
+  console.log("[QUEUE] driver-link job enqueued bidNo=%s", bidNo);
 }
 
 module.exports = { driverLinkQueue, addDriverLinkJob };

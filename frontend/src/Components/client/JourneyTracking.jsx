@@ -13,9 +13,7 @@ export default function JourneyTracking() {
 
   useEffect(() => {
     async function fetchJourney() {
-      console.log(`/api/client/${bidNo}/journey`);
       const data = await apiCall(`/api/client/${bidNo}/journey`);
-
 
       if (data.success) {
         setJourney(data.journey || []);
@@ -38,7 +36,6 @@ export default function JourneyTracking() {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10">
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold">Bid #{bidNo}</h1>
         <p className="text-sm text-gray-500 mt-1">
@@ -46,7 +43,6 @@ export default function JourneyTracking() {
         </p>
       </div>
 
-      {/* Timeline */}
       {journey.length === 0 ? (
         <p className="text-gray-500">Tracking not available yet.</p>
       ) : (
@@ -56,7 +52,6 @@ export default function JourneyTracking() {
 
             return (
               <div key={index} className="flex items-start gap-4">
-                {/* Dot + line */}
                 <div className="flex flex-col items-center">
                   <div
                     className={`w-3 h-3 rounded-full ${
@@ -66,7 +61,6 @@ export default function JourneyTracking() {
                   {!isLast && <div className="w-px h-10 bg-gray-200 mt-1" />}
                 </div>
 
-                {/* Content */}
                 <div className="pb-8">
                   <div className="text-base font-medium">
                     {prettifyCity(point.city)}

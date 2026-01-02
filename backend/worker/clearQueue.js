@@ -14,7 +14,7 @@ async function clearQueue() {
   await queue.clean(0, 1000, "completed");
   await queue.clean(0, 1000, "failed");
 
-  console.log("Winner SMS queue cleared.");
+  console.log("[QUEUE] cleared");
   process.exit(0);
 }
 
