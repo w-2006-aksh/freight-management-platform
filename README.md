@@ -2,7 +2,7 @@
 
 A full-stack logistics and freight marketplace designed to handle the end-to-end shipping lifecycle. This repository contains the backend API and the web-based dashboards for clients and transporters. The platform allows clients to post shipments and transporters to submit competitive bids, with the backend enforcing state transitions from posting through final delivery.
 
-_Note: The Flutter-based driver mobile application is maintained in a separate repository._
+> **📱 Mobile App:** The Flutter-based driver application that pairs with this backend is maintained in a separate repository: **[Freight Driver App](https://github.com/w-2006-aksh/freight-driver-app)**.
 
 ## Tech Stack
 
