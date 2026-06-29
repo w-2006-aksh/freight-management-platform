@@ -5,7 +5,7 @@ const formDataValidator = require("../middleware/formDataValidator");
 const postDetailsSchema = require("../formDataValidate/transporter/postDetails");
 
 const transporterController = require("../controllers/transporter");
-const handleTransportDetailsUpload = require("../middleware/handleTransportDetailsUpload.js");
+const handleTransportDetailsUpload = require("../middleware/handleTransportDetailsUpload");
 
 router.get("/live-bids", transporterController.getLiveBids);
 router.get("/my-bids", transporterController.getMyBids);

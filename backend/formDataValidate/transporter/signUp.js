@@ -21,7 +21,7 @@ const transporterSignUpSchema = z.object({
   password: z
     .string({ required_error: "Password is required" })
     .trim()
-    .min(5, { message: "Password must be atleast 6 characters" })
+    .min(5, { message: "Password must be atleast 5 characters" })
     .max(100, { message: "Password must not be more than 100 characters" }),
 
   gstNo: z

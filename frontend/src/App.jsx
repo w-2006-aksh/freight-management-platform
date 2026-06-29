@@ -74,7 +74,7 @@ function App() {
           <Route path="/client/:bidId/details" element={<Details />} />
           <Route path="/client/:bidNo/journey" element={<JourneyTracking />} />
           <Route
-            path="/client/manage-trusted-transporters/"
+            path="/client/manage-trusted-transporters"
             element={<ManageTrustedTransporters />}
           />
         </Routes>

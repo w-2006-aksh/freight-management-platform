@@ -93,15 +93,6 @@ function Navbar() {
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="/transporter/trips"
-                    className="hover:text-orange-600 transition"
-                    onClick={() => setMenuOpen(!menuOpen)}
-                  >
-                    My Trips
-                  </Link>
-                </li>
-                <li>
                   <button
                     className="bg-orange-500 text-white px-4 py-1.5 rounded-md hover:bg-orange-600 transition"
                     onClick={handleLogout}

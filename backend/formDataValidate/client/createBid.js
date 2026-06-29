@@ -26,7 +26,7 @@ const createBidSchema = z
     endDate: z
       .string({ required_error: "End date cannot be empty" })
       .refine((val) => new Date(val) > new Date(), {
-        message: "End Date must be after Start Date",
+        message: "End Date must be in the future",
       }),
 
     load: z

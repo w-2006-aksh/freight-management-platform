@@ -8,10 +8,10 @@ function attachUserIfLoggedIn(req, res, next) {
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     req.user = payload;
+    return next();
   } catch (err) {
-    next(err);
+    return next(err);
   }
-  next();
 }
 
 module.exports = attachUserIfLoggedIn;

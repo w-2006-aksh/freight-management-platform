@@ -6,7 +6,7 @@ const PasswordLoginSchema = z.object({
     .trim()
     .regex(/^\d{10}$/, { message: "Phone number must be exactly 10 digits" }),
 
-  password: z.string().min(6, "Password must be at least 6 characters."),
+  password: z.string().min(5, "Password must be at least 5 characters."),
 });
 
 module.exports = PasswordLoginSchema;

@@ -124,7 +124,7 @@ function ManageTrustedTransporters() {
           }
         `}
       >
-        {isSubmitting ? "isSubmitting..." : "Save"}
+        {isSubmitting ? "Saving..." : "Save"}
       </button>
     </div>
   );

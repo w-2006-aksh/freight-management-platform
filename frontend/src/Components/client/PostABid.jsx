@@ -50,6 +50,7 @@ function PostABid() {
         toast.success(res.message);
         navigate("/client/bids");
       } else {
+        toast.error(res.message || "Failed to post bid");
         setIsSubmitting(false);
         navigate("/client/post-a-bid");
       }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import LoginWithOTP from "./LoginWithOTP";
+import LoginWithOTP from "./LoginWithOtp";
 import LoginWithPassword from "./LoginWithPassword";
 import { useParams } from "react-router-dom";
 

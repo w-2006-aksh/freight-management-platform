@@ -46,4 +46,3 @@ const bidWinnerNotificationWorker = new Worker(
     },
   }
 );
-

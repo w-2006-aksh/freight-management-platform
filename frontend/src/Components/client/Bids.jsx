@@ -206,7 +206,7 @@ function Bids() {
               </div>
               {bid.status === "Awaiting Detail Confirmation" && (
                 <Link
-                  to={`/client/${bid._id}/Details`}
+                  to={`/client/${bid._id}/details`}
                   className="text-white self-end p-2 bg-blue-500 rounded-md hover:cursor-pointer hover:bg-blue-400 w-fit"
                 >
                   Confirm transport details

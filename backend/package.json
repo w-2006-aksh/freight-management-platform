@@ -22,7 +22,6 @@
     "multer": "^2.0.2",
     "react-leaflet": "^5.0.0",
     "redis": "^5.6.1",
-    "socket.io": "^4.8.1",
     "twilio": "^5.8.0",
     "zod": "^4.0.5"
   },
