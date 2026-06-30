@@ -3,6 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
 import { getTransporterBidContext } from "../../../Context/TransporterContext.jsx";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Truck } from "lucide-react";
 
 function Bids() {
   const [activeTab, setActiveTab] = useState("live");
@@ -32,45 +36,39 @@ function Bids() {
   };
 
   return (
-    <div className="flex flex-col gap-4 px-6 py-3 w-full items-center font-sans">
-      <div className="flex gap-7 border-b border-black pt-3 pb-2 w-full justify-center max-w-[700px]">
-        <button
+    <div className="flex w-full flex-col items-center gap-4 px-6 py-3">
+      <div className="flex w-full max-w-2xl justify-center gap-2">
+        <Button
+          variant={activeTab === "live" ? "default" : "ghost"}
           onClick={() => setActiveTab("live")}
-          className={`hover:text-orange-600 ${
-            activeTab === "live"
-              ? "border-b-2 border-orange-600 font-semibold text-orange-600"
-              : ""
-          }`}
         >
           Live Bids
-        </button>
+        </Button>
 
-        <button
+        <Button
+          variant={activeTab === "myBids" ? "default" : "ghost"}
           onClick={() => setActiveTab("myBids")}
-          className={`hover:text-orange-600 ${
-            activeTab === "myBids"
-              ? "border-b-2 border-orange-600 font-semibold text-orange-600"
-              : ""
-          }`}
         >
           My Bids
-        </button>
+        </Button>
       </div>
 
-      <div className="flex flex-col w-full items-center gap-y-4">
+      <div className="flex w-full flex-col items-center gap-y-4">
         {activeTab === "live" && liveBids.length > 0 && (
-          <div className="max-w-[700px] w-full text-sm text-gray-600 italic text-center">
+          <p className="text-muted-foreground w-full max-w-2xl text-center text-sm italic">
             Showing up to 10 available bids. Quote or reject a bid to see more.
-          </div>
+          </p>
         )}
 
         {activeTab === "live" && liveBids.length === 0 && (
-          <div className="max-w-[700px] w-full text-center text-gray-500 py-10">
-            <div className="text-lg font-semibold">No live bids available</div>
-            <div className="text-sm mt-1">
-              You'll see bids here when clients invite you to quote.
-            </div>
-          </div>
+          <Card className="w-full max-w-2xl">
+            <CardContent className="py-10 text-center">
+              <div className="text-lg font-semibold">No live bids available</div>
+              <div className="text-muted-foreground mt-1 text-sm">
+                You'll see bids here when clients invite you to quote.
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {activeTab === "live" &&
@@ -78,104 +76,100 @@ function Bids() {
             const bid = invite.bid;
 
             return (
-              <div
-                key={bid._id}
-                className="flex flex-col gap-y-3 bg-white pb-6 rounded-2xl shadow-md max-w-[700px] w-full px-4 sm:px-10"
-              >
-                <div className="font-semibold mt-4">
-                  Bidding ID : {bid.bidNo}
-                </div>
+              <Card key={bid._id} className="w-full max-w-2xl">
+                <CardContent className="space-y-4 pt-6">
+                  <div className="font-semibold">Bidding ID : {bid.bidNo}</div>
 
-                <div className="flex justify-between px-10">
-                  <div className="text-center">
-                    <div>From</div>
-                    <div className="font-semibold">{bid.from}</div>
-                    <div className="text-gray-500">
-                      {new Date(bid.startDate).toLocaleDateString()}
+                  <div className="flex justify-between px-4">
+                    <div className="text-center">
+                      <div className="text-muted-foreground text-sm">From</div>
+                      <div className="font-semibold">{bid.from}</div>
+                      <div className="text-muted-foreground text-sm">
+                        {new Date(bid.startDate).toLocaleDateString()}
+                      </div>
+                    </div>
+
+                    <Truck className="text-muted-foreground size-5 self-center" />
+
+                    <div className="text-center">
+                      <div className="text-muted-foreground text-sm">To</div>
+                      <div className="font-semibold">{bid.to}</div>
+                      <div className="text-muted-foreground text-sm">
+                        {new Date(bid.endDate).toLocaleDateString()}
+                      </div>
                     </div>
                   </div>
 
-                  <i className="fa-solid fa-truck-fast text-lg self-center"></i>
-
-                  <div className="text-center">
-                    <div>To</div>
-                    <div className="font-semibold">{bid.to}</div>
-                    <div className="text-gray-500">
-                      {new Date(bid.endDate).toLocaleDateString()}
-                    </div>
+                  <div className="text-muted-foreground text-right text-sm">
+                    Total Load:{" "}
+                    <span className="text-foreground font-semibold">
+                      {bid.load.toLocaleString()} tons
+                    </span>
                   </div>
-                </div>
+                </CardContent>
 
-                <div className="text-right text-sm text-gray-600">
-                  Total Load:{" "}
-                  <span className="text-black font-semibold">
-                    {bid.load.toLocaleString()} tons
-                  </span>
-                </div>
-
-                <div className="flex gap-3 self-end">
-                  <button
-                    className="bg-orange-500 hover:bg-orange-400 text-white px-3 py-1.5 rounded-md font-semibold"
+                <CardFooter className="justify-end gap-3">
+                  <Button
                     onClick={() =>
                       navigate(`/transporter/${bid.bidNo}/post-a-quote`)
                     }
                   >
                     Quote
-                  </button>
+                  </Button>
 
-                  <button
-                    className="bg-red-500 hover:bg-red-400 text-white px-3 py-1.5 rounded-md font-semibold"
+                  <Button
+                    variant="destructive"
                     onClick={() => handleReject(bid._id)}
                   >
                     Reject
-                  </button>
-                </div>
-              </div>
+                  </Button>
+                </CardFooter>
+              </Card>
             );
           })}
 
         {activeTab === "myBids" &&
           myBids.map((bid) => (
-            <div
-              key={bid._id}
-              className="flex flex-col gap-y-3 bg-white pb-6 rounded-2xl shadow-md max-w-[700px] w-full px-4 sm:px-10"
-            >
-              <div className="font-semibold mt-4">Bidding ID : {bid.bidNo}</div>
+            <Card key={bid._id} className="w-full max-w-2xl">
+              <CardContent className="space-y-4 pt-6">
+                <div className="font-semibold">Bidding ID : {bid.bidNo}</div>
 
-              <div className="flex justify-between px-10">
-                <div className="text-center">
-                  <div>From</div>
-                  <div className="font-semibold">{bid.from}</div>
+                <div className="flex justify-between px-4">
+                  <div className="text-center">
+                    <div className="text-muted-foreground text-sm">From</div>
+                    <div className="font-semibold">{bid.from}</div>
+                  </div>
+
+                  <Truck className="text-muted-foreground size-5 self-center" />
+
+                  <div className="text-center">
+                    <div className="text-muted-foreground text-sm">To</div>
+                    <div className="font-semibold">{bid.to}</div>
+                  </div>
                 </div>
 
-                <i className="fa-solid fa-truck-fast text-lg self-center"></i>
-
-                <div className="text-center">
-                  <div>To</div>
-                  <div className="font-semibold">{bid.to}</div>
+                <div className="space-y-1 text-right text-sm">
+                  <div>
+                    Status:{" "}
+                    <Badge variant="secondary">{bid.status}</Badge>
+                  </div>
+                  <div>
+                    Your Quote: ₹{bid.finalPrice?.toLocaleString() || "N/A"}
+                  </div>
+                  <div>Load: {bid.load} tons</div>
                 </div>
-              </div>
+              </CardContent>
 
-              <div className="text-right text-sm">
-                <div>
-                  Status:{" "}
-                  <span className="italic text-blue-600">{bid.status}</span>
-                </div>
-                <div>
-                  Your Quote: ₹{bid.finalPrice?.toLocaleString() || "N/A"}
-                </div>
-                <div>Load: {bid.load} tons</div>
-
-                {bid.status === "Awaiting Transport Details" && (
-                  <Link
-                    to={`/transporter/${bid._id}/upload-details`}
-                    className="inline-block mt-2 bg-orange-500 text-white px-3 py-1 rounded-lg font-semibold"
-                  >
-                    Upload details
-                  </Link>
-                )}
-              </div>
-            </div>
+              {bid.status === "Awaiting Transport Details" && (
+                <CardFooter className="justify-end">
+                  <Button asChild>
+                    <Link to={`/transporter/${bid._id}/upload-details`}>
+                      Upload details
+                    </Link>
+                  </Button>
+                </CardFooter>
+              )}
+            </Card>
           ))}
       </div>
     </div>

@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/slices/user";
 import apiCall from "../../util/apiCall";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -28,112 +30,99 @@ function Navbar() {
   };
 
   return (
-    <div className="bg-gray-200 font-sans">
-      <nav className="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur-md shadow-md h-[75px] flex items-center justify-between px-6 lg:px-20">
-        <Link
-          to="/"
-          className="text-2xl font-bold border-2 border-gray-800 px-4 py-1 rounded-md hover:bg-gray-300 transition-all duration-300"
-        >
-          ABC
-        </Link>
+    <nav className="fixed top-0 left-0 z-50 flex h-[75px] w-full items-center justify-between border-b bg-background/80 px-6 backdrop-blur-md lg:px-20">
+      <Button variant="outline" size="lg" asChild>
+        <Link to="/">ABC</Link>
+      </Button>
 
-        <ul
-          className={`${
-            menuOpen ? "top-full" : "top-[-500%]"
-          } absolute left-0 w-full max-lg:bg-white/70 max-lg:backdrop-blur-md max-lg:shadow-xl flex flex-col items-center gap-6 py-6 transition-all duration-500 ease-in-out lg:static lg:w-auto lg:flex lg:flex-row lg:bg-transparent lg:shadow-none lg:py-0 lg:gap-8 text-lg font-semibold`}
-        >
-          {isAuthenticated ? (
-            user?.role === "client" ? (
-              <>
-                <li>
+      <ul
+        className={`${
+          menuOpen ? "top-full" : "top-[-500%]"
+        } absolute left-0 flex w-full flex-col items-center gap-4 py-6 text-base font-medium transition-all duration-500 ease-in-out max-lg:bg-background/95 max-lg:shadow-xl lg:static lg:w-auto lg:flex-row lg:bg-transparent lg:py-0 lg:shadow-none`}
+      >
+        {isAuthenticated ? (
+          user?.role === "client" ? (
+            <>
+              <li>
+                <Button variant="ghost" asChild>
                   <Link
                     to="/client/post-a-bid"
-                    className="hover:text-orange-600 transition"
                     onClick={() => setMenuOpen(!menuOpen)}
                   >
                     Post a Bid
                   </Link>
-                </li>
-                <li>
+                </Button>
+              </li>
+              <li>
+                <Button variant="ghost" asChild>
                   <Link
                     to="/client/bids"
-                    className="hover:text-orange-600 transition"
                     onClick={() => setMenuOpen(!menuOpen)}
                   >
                     My Bids
                   </Link>
-                </li>
-                <li>
+                </Button>
+              </li>
+              <li>
+                <Button variant="ghost" asChild>
                   <Link
                     to="/client/manage-trusted-transporters"
-                    className="hover:text-orange-600 transition"
                     onClick={() => setMenuOpen(!menuOpen)}
                   >
                     Manage Trusted Transporters
                   </Link>
-                </li>
-                <li>
-                  <button
-                    className="bg-orange-500 text-white px-4 py-1.5 rounded-md hover:bg-orange-600 transition"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li>
+                </Button>
+              </li>
+              <li>
+                <Button onClick={handleLogout}>Logout</Button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Button variant="ghost" asChild>
                   <Link
                     to="/transporter/bids"
-                    className="hover:text-orange-600 transition"
                     onClick={() => setMenuOpen(!menuOpen)}
                   >
                     Bids
                   </Link>
-                </li>
-                <li>
-                  <button
-                    className="bg-orange-500 text-white px-4 py-1.5 rounded-md hover:bg-orange-600 transition"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
-                </li>
-              </>
-            )
-          ) : (
-            <>
-              <li>
-                <Link
-                  to="/loginAs"
-                  className="hover:text-orange-600 transition"
-                  onClick={() => setMenuOpen(!menuOpen)}
-                >
-                  Login
-                </Link>
+                </Button>
               </li>
               <li>
-                <Link
-                  to="/signUpAs"
-                  className="hover:text-orange-600 transition"
-                  onClick={() => setMenuOpen(!menuOpen)}
-                >
-                  Create Account
-                </Link>
+                <Button onClick={handleLogout}>Logout</Button>
               </li>
             </>
-          )}
-        </ul>
+          )
+        ) : (
+          <>
+            <li>
+              <Button variant="ghost" asChild>
+                <Link to="/loginAs" onClick={() => setMenuOpen(!menuOpen)}>
+                  Login
+                </Link>
+              </Button>
+            </li>
+            <li>
+              <Button variant="ghost" asChild>
+                <Link to="/signUpAs" onClick={() => setMenuOpen(!menuOpen)}>
+                  Create Account
+                </Link>
+              </Button>
+            </li>
+          </>
+        )}
+      </ul>
 
-        <div className="lg:hidden">
-          <i
-            className="fa-solid fa-bars fa-xl cursor-pointer"
-            onClick={() => setMenuOpen(!menuOpen)}
-          ></i>
-        </div>
-      </nav>
-    </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="lg:hidden"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        <Menu className="size-5" />
+      </Button>
+    </nav>
   );
 }
 

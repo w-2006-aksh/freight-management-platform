@@ -2,37 +2,30 @@ import React, { useState } from "react";
 import LoginWithOTP from "./LoginWithOtp";
 import LoginWithPassword from "./LoginWithPassword";
 import { useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 function Login() {
   const { role } = useParams();
   const [loginMode, changeLoginMode] = useState("password");
 
   return (
-    <div className="flex flex-col items-center justify-center w-screen h-full space-y-3">
-      <div className="flex flex-row gap-7 border-b border-black pt-3 pb-2  justify-center max-w-[600px] w-fit ">
-        <button
+    <div className="flex h-full w-full flex-col items-center justify-center space-y-6 p-6">
+      <div className="flex flex-row gap-4">
+        <Button
+          variant={loginMode === "password" ? "default" : "ghost"}
           onClick={() => changeLoginMode("password")}
-          className={`hover:text-orange-600 ${
-            loginMode === "password"
-              ? "border-b-2 border-orange-600 font-semibold text-orange-600"
-              : ""
-          }`}
         >
-          {" "}
-          Login with Password{" "}
-        </button>
-        <button
+          Login with Password
+        </Button>
+        <Button
+          variant={loginMode === "OTP" ? "default" : "ghost"}
           onClick={() => changeLoginMode("OTP")}
-          className={`hover:text-orange-600 ${
-            loginMode === "OTP"
-              ? "border-b-2 border-orange-600 font-semibold text-orange-600"
-              : ""
-          }`}
         >
-          {" "}
-          Login with OTP{" "}
-        </button>
+          Login with OTP
+        </Button>
       </div>
+      <Separator className="max-w-md" />
       {loginMode == "password" && <LoginWithPassword role={role} />}
       {loginMode == "OTP" && <LoginWithOTP role={role} />}
     </div>

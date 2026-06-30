@@ -2,6 +2,10 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 
 function SignUpAsTransporter() {
   const [userData, setUserData] = useState({
@@ -50,104 +54,87 @@ function SignUpAsTransporter() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-200 font-sans pt-10">
-      <div className="m-10 text-center text-5xl p-3 font-bold">
+    <div className="flex min-h-full flex-col items-center p-6 pt-10">
+      <div className="mb-8 text-center text-4xl font-bold">
         Signing up as{" "}
-        <span className="text-orange-600 hover:text-orange-500">
-          Transporter
-        </span>
+        <span className="text-primary">Transporter</span>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col w-[500px] max-w-full mx-auto mt-4 space-y-6 bg-white px-10 py-10 rounded-xl text-[18px] lg:text-xl"
-      >
-        <div className="flex flex-col gap-1">
-          <label htmlFor="name">Enterprise's Name</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            value={userData.name}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+      <Card className="w-full max-w-lg">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6 pt-6">
+            <div className="space-y-2">
+              <Label htmlFor="name">Enterprise's Name</Label>
+              <Input
+                type="text"
+                name="name"
+                id="name"
+                value={userData.name}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="email">Email ID</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={userData.email}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email ID</Label>
+              <Input
+                type="email"
+                name="email"
+                id="email"
+                value={userData.email}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="phNo">Phone Number</label>
-          <input
-            type="tel"
-            name="phNo"
-            id="phNo"
-            value={userData.phNo}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="phNo">Phone Number</Label>
+              <Input
+                type="tel"
+                name="phNo"
+                id="phNo"
+                value={userData.phNo}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="gstNo">GST Number</label>
-          <input
-            type="text"
-            name="gstNo"
-            id="gstNo"
-            value={userData.gstNo}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="gstNo">GST Number</Label>
+              <Input
+                type="text"
+                name="gstNo"
+                id="gstNo"
+                value={userData.gstNo}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="address">Address</label>
-          <input
-            type="text"
-            name="address"
-            id="address"
-            value={userData.address}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="address">Address</Label>
+              <Input
+                type="text"
+                name="address"
+                id="address"
+                value={userData.address}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={userData.password}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                id="password"
+                value={userData.password}
+                onChange={handleChange}
+              />
+            </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`font-semibold transition text-white p-2 text-[18px] lg:text-xl mt-4 rounded-md
-            ${
-              isSubmitting
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-orange-500 hover:bg-orange-400 hover:scale-[1.02]"
-            }
-          `}
-        >
-          {isSubmitting ? "Creating Account..." : "Create Account"}
-        </button>
-      </form>
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              {isSubmitting ? "Creating Account..." : "Create Account"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

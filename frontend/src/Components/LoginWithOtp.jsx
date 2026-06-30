@@ -4,6 +4,10 @@ import { setUser, changeAuthenticationStatus } from "../redux/slices/user";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import apiCall from "../../util/apiCall";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 
 function LoginWithOTP({ role }) {
   const dispatch = useDispatch();
@@ -87,92 +91,72 @@ function LoginWithOTP({ role }) {
   };
 
   return (
-    <div className="max-w-[800px] w-full flex flex-row items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white shadow-xl rounded-xl px-8 py-10 space-y-6"
-      >
-        <div className="flex flex-col">
-          <label htmlFor="phNo" className="text-gray-700 text-lg mb-1">
-            Phone number
-          </label>
-          <input
-            type="tel"
-            id="phNo"
-            name="phNo"
-            value={loginData.phNo}
-            readOnly={OTPSent}
-            onKeyDown={handleKeyPress}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none read-only:focus:ring-0 read-only:caret-transparent read-only:cursor-default read-only:bg-gray-100 focus:ring-2 focus:ring-orange-400 transition"
-          />
-        </div>
+    <div className="flex w-full max-w-md items-center justify-center">
+      <Card className="w-full">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6 pt-6">
+            <div className="space-y-2">
+              <Label htmlFor="phNo">Phone number</Label>
+              <Input
+                type="tel"
+                id="phNo"
+                name="phNo"
+                value={loginData.phNo}
+                readOnly={OTPSent}
+                onKeyDown={handleKeyPress}
+                onChange={handleChange}
+                className={OTPSent ? "bg-muted" : ""}
+              />
+            </div>
 
-        {OTPSent && (
-          <div className="flex flex-col">
-            <label htmlFor="OTP" className="text-gray-700 text-lg mb-1">
-              Authentication code
-            </label>
+            {OTPSent && (
+              <div className="space-y-2">
+                <Label htmlFor="OTP">Authentication code</Label>
 
-            <input
-              type="text"
-              id="OTP"
-              name="OTP"
-              value={loginData.OTP}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-            />
+                <Input
+                  type="text"
+                  id="OTP"
+                  name="OTP"
+                  value={loginData.OTP}
+                  onChange={handleChange}
+                />
 
-            <div className="flex gap-x-2 mt-8">
-              <button
+                <div className="mt-8 flex gap-2">
+                  <Button
+                    type="button"
+                    disabled={isSubmitting}
+                    onClick={handleSendOTP}
+                    variant="secondary"
+                    className="w-full"
+                  >
+                    Resend OTP
+                  </Button>
+
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full"
+                  >
+                    Login
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {!OTPSent && (
+              <Button
                 type="button"
                 disabled={isSubmitting}
                 onClick={handleSendOTP}
-                className={`w-full py-2 rounded-lg text-lg font-medium text-white transition shadow-md
-                  ${
-                    isSubmitting
-                      ? "bg-gray-300 cursor-not-allowed"
-                      : "bg-blue-500 hover:bg-blue-600 hover:scale-[1.03]"
-                  }
-                `}
+                variant="secondary"
+                className="w-full"
               >
-                Resend OTP
-              </button>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full py-2 rounded-lg text-lg font-medium text-white transition shadow-md
-                  ${
-                    isSubmitting
-                      ? "bg-gray-300 cursor-not-allowed"
-                      : "bg-orange-500 hover:bg-orange-600 hover:scale-[1.03]"
-                  }
-                `}
-              >
-                Login
-              </button>
-            </div>
-          </div>
-        )}
-
-        {!OTPSent && (
-          <button
-            type="button"
-            disabled={isSubmitting}
-            onClick={handleSendOTP}
-            className={`w-full py-2 rounded-lg text-lg font-medium text-white transition shadow-md
-              ${
-                isSubmitting
-                  ? "bg-gray-300 cursor-not-allowed"
-                  : "bg-blue-500 hover:bg-blue-600 hover:scale-[1.03]"
-              }
-            `}
-          >
-            Send code
-          </button>
-        )}
-      </form>
+                Send code
+              </Button>
+            )}
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 function ManageTrustedTransporters() {
   const [transporters, setTransporters] = useState([]);
@@ -64,68 +69,55 @@ function ManageTrustedTransporters() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[200px] text-gray-600">
+      <div className="text-muted-foreground flex min-h-[200px] items-center justify-center">
         Loading transporters...
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h2 className="text-2xl font-semibold mb-2">
-        Manage Trusted Transporters
-      </h2>
+    <div className="mx-auto max-w-3xl p-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Manage Trusted Transporters</CardTitle>
+          <p className="text-muted-foreground text-sm">
+            Select up to{" "}
+            <span className="text-foreground font-semibold">{maxTrustedTransporters}</span>{" "}
+            transporters you trust.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="divide-y rounded-md border">
+            {transporters.map((transporter) => (
+              <div
+                key={transporter._id}
+                className="flex items-center gap-4 px-4 py-3"
+              >
+                <Checkbox
+                  id={transporter._id}
+                  checked={transporter.isTrusted}
+                  onCheckedChange={() => toggleTrusted(transporter._id)}
+                />
 
-      <p className="text-sm text-gray-600 mb-4">
-        Select up to{" "}
-        <span className="font-semibold">{maxTrustedTransporters}</span>{" "}
-        transporters you trust.
-      </p>
+                <Label htmlFor={transporter._id} className="flex-1 cursor-pointer">
+                  <div className="font-medium">{transporter.name}</div>
+                  <div className="text-muted-foreground text-sm">
+                    {transporter.phNo} · {transporter.email}
+                  </div>
+                </Label>
 
-      <div className="divide-y border rounded-md">
-        {transporters.map((transporter) => (
-          <div
-            key={transporter._id}
-            className="flex items-center gap-4 px-4 py-3 hover:bg-gray-50"
-          >
-            <input
-              type="checkbox"
-              checked={transporter.isTrusted}
-              onChange={() => toggleTrusted(transporter._id)}
-              className="h-4 w-4 accent-green-600 cursor-pointer"
-            />
-
-            <div className="flex-1">
-              <div className="font-medium text-gray-800">
-                {transporter.name}
+                {transporter.isTrusted && (
+                  <Badge variant="secondary">Trusted</Badge>
+                )}
               </div>
-              <div className="text-sm text-gray-500">
-                {transporter.phNo} · {transporter.email}
-              </div>
-            </div>
-
-            {transporter.isTrusted && (
-              <span className="text-xs text-green-600 font-medium">
-                Trusted
-              </span>
-            )}
+            ))}
           </div>
-        ))}
-      </div>
 
-      <button
-        onClick={saveTrusted}
-        disabled={isSubmitting}
-        className={`mt-6 px-6 py-2 rounded-md text-white font-medium
-          ${
-            isSubmitting
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-green-600 hover:bg-green-700"
-          }
-        `}
-      >
-        {isSubmitting ? "Saving..." : "Save"}
-      </button>
+          <Button onClick={saveTrusted} disabled={isSubmitting}>
+            {isSubmitting ? "Saving..." : "Save"}
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

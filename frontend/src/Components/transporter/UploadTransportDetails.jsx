@@ -3,6 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
 import { getTransporterBidContext } from "../../../Context/TransporterContext.jsx";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Upload } from "lucide-react";
 
 function UploadDetails() {
   const navigate = useNavigate();
@@ -87,115 +92,103 @@ function UploadDetails() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-300 font-sans">
-      <div className="m-10 text-center text-5xl p-3 font-bold">
+    <div className="flex min-h-full flex-col items-center p-6 pt-10">
+      <div className="mb-8 text-center text-4xl font-bold">
         Upload details
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col w-[500px] max-w-full mx-auto mt-4 space-y-6 bg-white px-10 py-10 rounded-xl text-[18px] lg:text-xl"
-      >
-        <div className="flex flex-col gap-1">
-          <label htmlFor="driverName">Driver's Name</label>
-          <input
-            type="text"
-            name="driverName"
-            id="driverName"
-            value={details.driverName}
-            onChange={handleChange}
-            className="py-2 border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+      <Card className="w-full max-w-lg">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6 pt-6">
+            <div className="space-y-2">
+              <Label htmlFor="driverName">Driver's Name</Label>
+              <Input
+                type="text"
+                name="driverName"
+                id="driverName"
+                value={details.driverName}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="driverPhNo">Driver's phone number</label>
-          <input
-            type="tel"
-            name="driverPhNo"
-            id="driverPhNo"
-            value={details.driverPhNo}
-            onChange={handleChange}
-            className="py-2 border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="driverPhNo">Driver's phone number</Label>
+              <Input
+                type="tel"
+                name="driverPhNo"
+                id="driverPhNo"
+                value={details.driverPhNo}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="driverLicense">Upload driver's license</label>
-          <input
-            type="file"
-            name="driverLicense"
-            id="driverLicense"
-            className="hidden"
-            accept=".pdf"
-            onChange={handleChange}
-          />
-          <label
-            htmlFor="driverLicense"
-            className="px-2 py-2 border-2 border-dashed border-orange-300 cursor-pointer flex gap-2 rounded-md hover:bg-gray-100 hover:border-orange-500 text-orange-500"
-          >
-            <i className="fa-solid fa-upload"></i>
-            <span>
-              {details.driverLicense
-                ? details.driverLicense.name
-                : "Upload driver's license"}
-            </span>
-          </label>
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="driverLicense">Upload driver's license</Label>
+              <input
+                type="file"
+                name="driverLicense"
+                id="driverLicense"
+                className="hidden"
+                accept=".pdf"
+                onChange={handleChange}
+              />
+              <Label
+                htmlFor="driverLicense"
+                className="border-input text-primary hover:bg-accent flex cursor-pointer items-center gap-2 rounded-md border border-dashed px-3 py-2"
+              >
+                <Upload className="size-4" />
+                <span>
+                  {details.driverLicense
+                    ? details.driverLicense.name
+                    : "Upload driver's license"}
+                </span>
+              </Label>
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="vehicleNo">Vehicle Number</label>
-          <input
-            type="text"
-            name="vehicleNo"
-            id="vehicleNo"
-            value={details.vehicleNo}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="vehicleNo">Vehicle Number</Label>
+              <Input
+                type="text"
+                name="vehicleNo"
+                id="vehicleNo"
+                value={details.vehicleNo}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="vehicleDocument">Upload vehicle document</label>
-          <input
-            type="file"
-            name="vehicleDocument"
-            id="vehicleDocument"
-            className="hidden"
-            accept=".pdf"
-            onChange={handleChange}
-          />
-          <label
-            htmlFor="vehicleDocument"
-            className="px-2 py-2 border-2 border-dashed border-orange-300 cursor-pointer flex gap-2 rounded-md hover:bg-gray-100 hover:border-orange-500 text-orange-500"
-          >
-            <i className="fa-solid fa-upload"></i>
-            <span>
-              {details.vehicleDocument
-                ? details.vehicleDocument.name
-                : "Upload vehicle document"}
-            </span>
-          </label>
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="vehicleDocument">Upload vehicle document</Label>
+              <input
+                type="file"
+                name="vehicleDocument"
+                id="vehicleDocument"
+                className="hidden"
+                accept=".pdf"
+                onChange={handleChange}
+              />
+              <Label
+                htmlFor="vehicleDocument"
+                className="border-input text-primary hover:bg-accent flex cursor-pointer items-center gap-2 rounded-md border border-dashed px-3 py-2"
+              >
+                <Upload className="size-4" />
+                <span>
+                  {details.vehicleDocument
+                    ? details.vehicleDocument.name
+                    : "Upload vehicle document"}
+                </span>
+              </Label>
+            </div>
 
-        <div className="text-[15px] text-gray-500 italic">
-          Upload format must be PDF
-        </div>
+            <p className="text-muted-foreground text-sm italic">
+              Upload format must be PDF
+            </p>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`font-semibold transition text-white p-2 text-[18px] lg:text-xl mt-4 rounded-md
-            ${
-              isSubmitting
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-orange-500 hover:bg-orange-400 hover:scale-[1.02]"
-            }
-          `}
-        >
-          {isSubmitting ? "Submitting..." : "Submit"}
-        </button>
-      </form>
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              {isSubmitting ? "Submitting..." : "Submit"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

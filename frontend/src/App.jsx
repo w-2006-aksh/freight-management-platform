@@ -46,7 +46,7 @@ function App() {
   return (
     <>
       <Navbar></Navbar>
-      <div className="pt-[75px] bg-gray-200 w-screen h-screen">
+      <div className="h-screen w-screen bg-background pt-[75px]">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/loginAs" element={<LoginAs />} />

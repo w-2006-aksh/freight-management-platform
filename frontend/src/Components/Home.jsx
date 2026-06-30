@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 function Home() {
   return (
-    <>
-     <div>Home page</div>
-    </>
+    <div className="flex min-h-full items-center justify-center p-6">
+      <div>Home page</div>
+    </div>
   );
 }
 

@@ -3,6 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
 import { getClientBidContext } from "../../../Context/ClientBidContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function PostABid() {
   const [cityData, setCityData] = useState([]);
@@ -69,114 +80,111 @@ function PostABid() {
   };
 
   return (
-    <div className="bg-gray-100 flex flex-col items-center justify-center min-h-screen font-sans">
-      <h1 className="text-4xl font-bold mb-10 text-center">Request a Quote</h1>
+    <div className="flex min-h-full flex-col items-center justify-center p-6">
+      <h1 className="mb-6 text-3xl font-bold">Request a Quote</h1>
 
-      <div className="max-w-[500px] w-full text-sm text-gray-600 italic text-center mb-4">
+      <p className="text-muted-foreground mb-6 max-w-lg text-center text-sm italic">
         Note: Bids automatically expire if a transporter is not finalized by the
         scheduled start date.
-      </div>
+      </p>
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col w-[500px] max-w-full mx-auto mt-4 space-y-6 bg-white px-10 py-10 rounded-xl text-[18px] lg:text-xl"
-      >
-        <div className="flex flex-col gap-1">
-          <label htmlFor="from">From</label>
-          <select
-            name="from"
-            id="from"
-            value={bidData.from}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          >
-            <option value="">Select city</option>
-            {cityData.map((city, index) => (
-              <option key={index} value={city}>
-                {city}
-              </option>
-            ))}
-          </select>
-        </div>
+      <Card className="w-full max-w-lg">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6 pt-6">
+            <div className="space-y-2">
+              <Label htmlFor="from">From</Label>
+              <Select
+                name="from"
+                value={bidData.from || undefined}
+                onValueChange={(value) =>
+                  handleChange({ target: { name: "from", value } })
+                }
+              >
+                <SelectTrigger id="from">
+                  <SelectValue placeholder="Select city" />
+                </SelectTrigger>
+                <SelectContent>
+                  {cityData.map((city, index) => (
+                    <SelectItem key={index} value={city}>
+                      {city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="to">To</label>
-          <select
-            name="to"
-            id="to"
-            value={bidData.to}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          >
-            <option value="">Select city</option>
-            {cityData.map((city, index) => (
-              <option key={index} value={city}>
-                {city}
-              </option>
-            ))}
-          </select>
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="to">To</Label>
+              <Select
+                name="to"
+                value={bidData.to || undefined}
+                onValueChange={(value) =>
+                  handleChange({ target: { name: "to", value } })
+                }
+              >
+                <SelectTrigger id="to">
+                  <SelectValue placeholder="Select city" />
+                </SelectTrigger>
+                <SelectContent>
+                  {cityData.map((city, index) => (
+                    <SelectItem key={index} value={city}>
+                      {city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="load">Load capacity (tons)</label>
-          <input
-            type="number"
-            name="load"
-            id="load"
-            value={bidData.load}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="load">Load capacity (tons)</Label>
+              <Input
+                type="number"
+                name="load"
+                id="load"
+                value={bidData.load}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="commodity">Commodity</label>
-          <input
-            type="text"
-            name="commodity"
-            id="commodity"
-            value={bidData.commodity}
-            onChange={handleChange}
-            className="border border-gray-300 rounded pl-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="commodity">Commodity</Label>
+              <Input
+                type="text"
+                name="commodity"
+                id="commodity"
+                value={bidData.commodity}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="startDate">Start date</label>
-          <input
-            type="date"
-            name="startDate"
-            id="startDate"
-            value={bidData.startDate}
-            onChange={handleChange}
-            className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="startDate">Start date</Label>
+              <Input
+                type="date"
+                name="startDate"
+                id="startDate"
+                value={bidData.startDate}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="endDate">End date</label>
-          <input
-            type="date"
-            name="endDate"
-            id="endDate"
-            value={bidData.endDate}
-            onChange={handleChange}
-            className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="endDate">End date</Label>
+              <Input
+                type="date"
+                name="endDate"
+                id="endDate"
+                value={bidData.endDate}
+                onChange={handleChange}
+              />
+            </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`font-semibold transition text-white p-2 text-[18px] lg:text-xl mt-4 rounded-md ${
-            isSubmitting
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-orange-500 hover:scale-[1.02] hover:bg-orange-400"
-          }`}
-        >
-          {isSubmitting ? "Posting..." : "Post Request"}
-        </button>
-      </form>
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              {isSubmitting ? "Posting..." : "Post Request"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

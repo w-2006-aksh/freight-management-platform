@@ -3,6 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiCall from "../../../util/apiCall";
 import { getClientBidContext } from "../../../Context/ClientBidContext";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Truck } from "lucide-react";
 
 function SeeQuotes() {
   const { bidId } = useParams();
@@ -64,75 +67,67 @@ function SeeQuotes() {
   if (loading || !bidData) return <div></div>;
 
   return (
-    <div className="font-sans flex flex-col items-center gap-6 px-4 sm:px-12 py-6 bg-gray-100 min-h-screen">
-      {/* Bid summary */}
-      <div className="flex flex-col gap-y-6 bg-white py-5 px-4 sm:px-12 rounded-xl shadow-md max-w-[700px] w-full">
-        <div className="font-semibold sm:text-[18px] text-[15px]">
-          Bidding ID: {bidData.bidDetails.bidNo}
-        </div>
+    <div className="flex min-h-full flex-col items-center gap-6 px-4 py-6 sm:px-12">
+      <Card className="w-full max-w-2xl">
+        <CardContent className="space-y-6 pt-6">
+          <div className="font-semibold">
+            Bidding ID: {bidData.bidDetails.bidNo}
+          </div>
 
-        <div className="flex justify-between px-6">
-          <div className="flex flex-col items-center">
-            <div>From</div>
-            <div className="font-semibold">{bidData.bidDetails.from}</div>
-            <div className="text-gray-500">
-              {new Date(bidData.bidDetails.startDate).toLocaleDateString()}
+          <div className="flex justify-between px-4">
+            <div className="flex flex-col items-center">
+              <div className="text-muted-foreground text-sm">From</div>
+              <div className="font-semibold">{bidData.bidDetails.from}</div>
+              <div className="text-muted-foreground text-sm">
+                {new Date(bidData.bidDetails.startDate).toLocaleDateString()}
+              </div>
+            </div>
+
+            <Truck className="text-muted-foreground size-5 self-center" />
+
+            <div className="flex flex-col items-center">
+              <div className="text-muted-foreground text-sm">To</div>
+              <div className="font-semibold">{bidData.bidDetails.to}</div>
+              <div className="text-muted-foreground text-sm">
+                {new Date(bidData.bidDetails.endDate).toLocaleDateString()}
+              </div>
             </div>
           </div>
 
-          <i className="fa-solid fa-truck-fast text-lg self-center"></i>
-
-          <div className="flex flex-col items-center">
-            <div>To</div>
-            <div className="font-semibold">{bidData.bidDetails.to}</div>
-            <div className="text-gray-500">
-              {new Date(bidData.bidDetails.endDate).toLocaleDateString()}
-            </div>
+          <div className="text-muted-foreground font-medium italic">
+            Total Load:{" "}
+            <span className="text-foreground not-italic">
+              {bidData.bidDetails.load}
+            </span>
           </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        <div className="italic font-semibold text-gray-600">
-          Total Load:{" "}
-          <span className="text-black not-italic">
-            {bidData.bidDetails.load}
-          </span>
-        </div>
-      </div>
-
-      {/* Quotes */}
       {bidData.quotes.map((quote) => (
-        <div
-          key={quote._id}
-          className="bg-white shadow-md rounded-xl w-full max-w-[700px] p-4 sm:p-6"
-        >
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div className="text-[18px] font-semibold text-green-700">
-              ₹{quote.quotedPrice}
-            </div>
+        <Card key={quote._id} className="w-full max-w-2xl">
+          <CardContent className="space-y-4 pt-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="text-lg font-semibold text-green-700">
+                ₹{quote.quotedPrice}
+              </div>
 
-            <div className="flex flex-col sm:items-end text-sm text-gray-700">
-              <div className="font-medium">{quote.transporter.name}</div>
-              <div>{quote.transporter.phNo}</div>
-              <div>{quote.transporter.email}</div>
+              <div className="text-muted-foreground flex flex-col text-sm sm:items-end">
+                <div className="text-foreground font-medium">{quote.transporter.name}</div>
+                <div>{quote.transporter.phNo}</div>
+                <div>{quote.transporter.email}</div>
+              </div>
             </div>
-          </div>
+          </CardContent>
 
-          <div className="mt-4 flex justify-end">
-            <button
+          <CardFooter className="justify-end">
+            <Button
               disabled={isSubmitting}
               onClick={() => handleAcceptQuote(quote)}
-              className={`px-4 py-2 rounded-lg text-sm transition-colors
-                ${
-                  isSubmitting
-                    ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 text-white"
-                }
-              `}
             >
               {isSubmitting ? "Processing..." : "Accept and request details"}
-            </button>
-          </div>
-        </div>
+            </Button>
+          </CardFooter>
+        </Card>
       ))}
     </div>
   );

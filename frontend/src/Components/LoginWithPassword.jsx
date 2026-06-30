@@ -4,6 +4,10 @@ import { setUser, changeAuthenticationStatus } from "../redux/slices/user";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import apiCall from "../../util/apiCall";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 
 function LoginWithPassword({ role }) {
   const dispatch = useDispatch();
@@ -56,53 +60,38 @@ function LoginWithPassword({ role }) {
   };
 
   return (
-    <div className="max-w-[800px] w-full flex flex-row items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white shadow-xl rounded-xl px-8 py-10 space-y-6"
-      >
-        <div className="flex flex-col">
-          <label htmlFor="phNo" className="text-gray-700 text-lg mb-1">
-            Phone number
-          </label>
-          <input
-            type="tel"
-            id="phNo"
-            name="phNo"
-            value={loginData.phNo}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-          />
-        </div>
+    <div className="flex w-full max-w-md items-center justify-center">
+      <Card className="w-full">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6 pt-6">
+            <div className="space-y-2">
+              <Label htmlFor="phNo">Phone number</Label>
+              <Input
+                type="tel"
+                id="phNo"
+                name="phNo"
+                value={loginData.phNo}
+                onChange={handleChange}
+              />
+            </div>
 
-        <div className="flex flex-col">
-          <label htmlFor="password" className="text-gray-700 text-lg mb-1">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={loginData.password}
-            onChange={handleChange}
-            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400 transition"
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                id="password"
+                name="password"
+                value={loginData.password}
+                onChange={handleChange}
+              />
+            </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`w-full py-2 rounded-lg text-lg font-medium text-white transition shadow-md
-            ${
-              isSubmitting
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-orange-500 hover:bg-orange-600 hover:scale-[1.03]"
-            }
-          `}
-        >
-          Login
-        </button>
-      </form>
+            <Button type="submit" disabled={isSubmitting} className="w-full">
+              Login
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
